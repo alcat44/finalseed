@@ -9,6 +9,7 @@ public class Timline2 : MonoBehaviour
     public GameObject Camera1;
     public GameObject Camera2;
     public GameObject colliderObject; // Menambahkan referensi ke objek collider
+    public GameObject exhaustionText;
     public SC_FPSController playerScript;
     public AudioSource audioscource;
     public enemyAI1 enemyScript;
@@ -34,6 +35,7 @@ public class Timline2 : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            exhaustionText.SetActive(false);
             // Mengatur kamera dan objek
             Camera2.SetActive(true);
             Camera1.SetActive(false);

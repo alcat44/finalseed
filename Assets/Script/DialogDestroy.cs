@@ -14,6 +14,7 @@ public class DialogDestroy : MonoBehaviour
     private bool isDialogActive = false; // Untuk mengecek apakah dialog sedang aktif
 
     public MonoBehaviour SC_FPSController;
+    public Pause pauseScript;
     public MonoBehaviour door; // Tambahkan referensi untuk script player movement
     public AudioSource audioSource;
     public AudioSource audioSource2;
@@ -55,6 +56,7 @@ public class DialogDestroy : MonoBehaviour
         index = 0;
         isDialogActive = true; // Tandai bahwa dialog aktif
         SC_FPSController.enabled = false; // Matikan script player movement
+        if (pauseScript != null) pauseScript.enabled = false; 
         audioSource.enabled = false;
         intText.SetActive(false);
         audioSource2.PlayOneShot(LockedSound);
@@ -85,6 +87,7 @@ public class DialogDestroy : MonoBehaviour
             isDialogActive = false; // Tandai bahwa dialog sudah selesai
             textComponent.text = string.Empty; // Kosongkan teks setelah dialog selesai
             SC_FPSController.enabled = true; // Aktifkan kembali script player movement
+            if (pauseScript != null) pauseScript.enabled = true;
             audioSource.enabled = true;
             DialogBG.SetActive(false);
             Destroy(trigger);

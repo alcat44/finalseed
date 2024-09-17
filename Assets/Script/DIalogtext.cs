@@ -14,6 +14,7 @@ public class DialogText : MonoBehaviour
     private bool isDialogActive = false; // Untuk mengecek apakah dialog sedang aktif
 
     public MonoBehaviour SC_FPSController;
+    public Pause pauseScript;
     public MonoBehaviour door; // Tambahkan referensi untuk script player movement
     public AudioSource audioSource;
     public AudioSource audioSource2;
@@ -58,6 +59,7 @@ public class DialogText : MonoBehaviour
         intText.SetActive(false);
         audioSource2.PlayOneShot(LockedSound);
         DialogBG.SetActive(true);
+        if (pauseScript != null) pauseScript.enabled = false; 
         StartCoroutine(TypeLine());
     }
 
@@ -85,6 +87,7 @@ public class DialogText : MonoBehaviour
             textComponent.text = string.Empty; // Kosongkan teks setelah dialog selesai
             SC_FPSController.enabled = true; // Aktifkan kembali script player movement
             audioSource.enabled = true;
+            if (pauseScript != null) pauseScript.enabled = true;
             DialogBG.SetActive(false);
         }
     }
@@ -113,5 +116,15 @@ public class DialogText : MonoBehaviour
             interactable = false; // Pemain tidak bisa berinteraksi
             door.enabled = true;
         }
+    }
+
+    public void ResetDialog()
+    {
+        // Reset dialog UI and interaction states
+        textComponent.text = string.Empty; // Clear any active dialog text
+        intText.SetActive(false); // Hide interaction prompt
+        interactable = false; // Reset interaction flag
+        isDialogActive = false; // Ensure dialog is not active
+        DialogBG.SetActive(false); // Hide dialog background
     }
 }

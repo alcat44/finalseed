@@ -15,9 +15,10 @@ public class Dialogpintu : MonoBehaviour
     public Image blackScreen; // Assign ini di Inspector dengan Image hitam di Canvas
     public float fadeDuration = 1f; // Durasi fade in dan fade out
     public bool interactable = false; // Untuk mengecek apakah pemain ada di dalam area trigger
-    private bool isDialogActive = false; // Untuk mengecek apakah dialog sedang aktif
+    public bool isDialogActive = false; // Untuk mengecek apakah dialog sedang aktif
 
     public MonoBehaviour SC_FPSController; // Script player movement
+    public Pause pauseScript;
     public AudioSource audioSource;
     public GameObject DialogBG;
     public AudioSource doorSFX;
@@ -78,6 +79,7 @@ public class Dialogpintu : MonoBehaviour
         audioSource.enabled = false;
         intText.SetActive(false);
         DialogBG.SetActive(true);
+        if (pauseScript != null) pauseScript.enabled = false; 
         StartCoroutine(TypeLine());
     }
 
@@ -105,6 +107,7 @@ public class Dialogpintu : MonoBehaviour
             textComponent.text = string.Empty; // Kosongkan teks setelah dialog selesai
             SC_FPSController.enabled = true; // Aktifkan kembali script player movement
             audioSource.enabled = true;
+            if (pauseScript != null) pauseScript.enabled = true;
             DialogBG.SetActive(false);
         }
     }

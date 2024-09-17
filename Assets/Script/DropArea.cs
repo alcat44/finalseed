@@ -14,6 +14,7 @@ public class DropArea : MonoBehaviour
     public float textSpeed; // Kecepatan pengetikan teks
     public GameObject DialogBG; // Background dialog
     public MonoBehaviour SC_FPSController; // Kontrol player
+    public Pause pauseScript;
     public AudioSource audioSource;
 
     public PlayableDirector timeline; // Timeline yang akan dipanggil setelah 2 trigger
@@ -32,6 +33,8 @@ public class DropArea : MonoBehaviour
     
     public GameObject objectToDisable1;
     public GameObject objectToDisable2;
+    public GameObject bapakDisable;
+    public GameObject exhaustionText;
 
     private void Start()
     {
@@ -108,6 +111,9 @@ public class DropArea : MonoBehaviour
             {
                 // Aktifkan timeline
                 timeline.gameObject.SetActive(true);
+                bapakDisable.SetActive(false);
+                intText.SetActive(false);
+                exhaustionText.SetActive(false);
                 timeline.Play();
 
                 // Nonaktifkan semua interaksi
@@ -149,6 +155,7 @@ public class DropArea : MonoBehaviour
         index = NumberDialog; // Mulai dialog dari nilai NumberDialog
         isDialogueActive = true; // Tandai dialog sedang aktif
         SC_FPSController.enabled = false; // Nonaktifkan movement player
+        if (pauseScript != null) pauseScript.enabled = false; 
         audioSource.enabled = false;
         intText.SetActive(false); // Sembunyikan teks "Press E"
         DialogBG.SetActive(true); // Tampilkan background dialog
@@ -187,6 +194,7 @@ public class DropArea : MonoBehaviour
         isDialogueActive = false; // Tandai dialog selesai
         textComponent.text = string.Empty;
         SC_FPSController.enabled = true; // Aktifkan kembali kontrol pemain
+        if (pauseScript != null) pauseScript.enabled = true;
         audioSource.enabled = true;
         DialogBG.SetActive(false); // Sembunyikan background dialog
 

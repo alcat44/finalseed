@@ -76,7 +76,24 @@ public class SC_FPSController : MonoBehaviour
 
         // Initialize text to be invisible
         exhaustionText.gameObject.SetActive(false);
+
+        // Inisialisasi exhausting dengan aman saat game dimulai
+        isExhausted = false;            // Tidak dalam kondisi exhausted saat start
+        shiftPressedTime = 0f;          // Reset waktu shift pressed di awal
+        timeSinceLastShiftPress = 0f;   // Reset waktu terakhir shift ditekan di awal
     }
+
+    public void ResetPlayerMovement()
+    {
+        isExhausted = false;  // Reset kondisi exhaustion
+        shiftPressedTime = 0f;  // Reset timer shift pressed
+        timeSinceLastShiftPress = 0f;  // Reset waktu sejak shift terakhir ditekan
+        exhaustionText.gameObject.SetActive(false);  // Sembunyikan teks exhaustion
+
+        // Reset posisi kamera ke posisi semula
+        playerCamera.transform.localPosition = originalCameraPosition;
+    }
+
 
      IEnumerator FadeInScreen()
     {

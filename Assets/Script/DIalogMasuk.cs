@@ -10,29 +10,35 @@ public class DIalogMasuk : MonoBehaviour
     public float textSpeed;
     public GameObject Dialog;
     public GameObject DialogBG;
-    public MonoBehaviour SC_FPSController;
+    public GameObject player;  // Reference ke Player GameObject
+    public GameObject pauseMenuObject;  // Reference ke GameObject Pause
     public AudioSource audioSource;
 
-    private int index;
-    private bool isDialogueActive = false; // Menambahkan flag agar dialog hanya dimulai sekali
+    public bool isDialogueActive = false;  // Public flag untuk pengecekan status dialog
 
-    // Start is called before the first frame update
+    private int index;
+    private SC_FPSController scFpsController;
+    private Pause pauseScript;
+
     void Start()
     {
+        // Inisialisasi komponen pada Start
+        scFpsController = player.GetComponent<SC_FPSController>();  // Ambil komponen SC_FPSController dari player
+        pauseScript = pauseMenuObject.GetComponent<Pause>();  // Ambil komponen Pause dari pauseMenuObject
+
         textComponent.text = string.Empty;
-        DialogBG.SetActive(false); // Pastikan dialog background tidak aktif di awal
+        DialogBG.SetActive(false);  // Pastikan dialog background tidak aktif di awal
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if ((other.CompareTag("Player") || other.CompareTag("MainCamera")) && !isDialogueActive) // Cek apakah dialog sudah aktif
+        if ((other.CompareTag("Player") || other.CompareTag("MainCamera")) && !isDialogueActive)
         {
             StartDialogue();
-            isDialogueActive = true; // Tandai bahwa dialog sudah dimulai
+            isDialogueActive = true;
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (isDialogueActive && Input.GetKeyDown(KeyCode.E))
@@ -53,10 +59,12 @@ public class DIalogMasuk : MonoBehaviour
     {
         index = 0;
         StartCoroutine(TypeLine());
-        DialogBG.SetActive(true); // Menampilkan dialog background
-        Dialog.SetActive(true);   // Menampilkan dialog object
-        SC_FPSController.enabled = false;
-        audioSource.enabled = false;
+        DialogBG.SetActive(true);  // Tampilkan background dialog
+        Dialog.SetActive(true);    // Tampilkan dialog object
+
+        if (scFpsController != null) scFpsController.enabled = false;  // Nonaktifkan kontrol player
+        if (pauseScript != null) pauseScript.enabled = false;  // Nonaktifkan pause menu
+        if (audioSource != null) audioSource.enabled = false;  // Nonaktifkan audio source jika ada
     }
 
     IEnumerator TypeLine()
@@ -78,12 +86,20 @@ public class DIalogMasuk : MonoBehaviour
         }
         else
         {
-            textComponent.text = string.Empty;
-            DialogBG.SetActive(false); // Menonaktifkan dialog background
-            Destroy(Dialog); // Hapus dialog setelah selesai
-            isDialogueActive = false; // Reset flag setelah dialog selesai
-            SC_FPSController.enabled = true;
-            audioSource.enabled = true;
+            EndDialogue();
         }
     }
+
+    void EndDialogue()
+    {
+        textComponent.text = string.Empty;
+        DialogBG.SetActive(false);  // Sembunyikan background dialog
+        Dialog.SetActive(false);    // Sembunyikan dialog object
+        isDialogueActive = false;   // Reset flag setelah dialog selesai
+
+        if (scFpsController != null) scFpsController.enabled = true;  // Aktifkan kontrol player
+        if (pauseScript != null) pauseScript.enabled = true;  // Aktifkan pause menu
+        if (audioSource != null) audioSource.enabled = true;  // Aktifkan audio source jika ada
+    }
 }
+

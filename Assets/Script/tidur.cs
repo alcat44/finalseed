@@ -1,37 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;  // Pastikan untuk menambahkan namespace ini untuk PlayableDirector
+using UnityEngine.Playables;
 
 public class tidur : MonoBehaviour
 {
     public Dialogpintu dialogPintu;
     public GameObject intText;
+    public GameObject exhaustionText;
+    public GameObject kasur2;
     public bool interactable;
-    public Collider laci, laci2, meja, lemari1, lemari2, laci4;
-    public PlayableDirector cutsceneDirector; // Referensi ke PlayableDirector
-    public Camera mainCamera; // Referensi ke kamera utama
-    public Camera cutsceneCamera; // Referensi ke kamera cutscene (jika ada)
-    public SC_FPSController SC_FPSController; // Referensi ke skrip PlayerController (jika ada)
-    public float cutsceneDuration = 5f; // Durasi cutscene sebelum bisa dilewati
-
+    public Collider laci, laci2, meja, lemari1, lemari2, laci4, kasur3;
+    public PlayableDirector timeline;
+    public Camera mainCamera;
+    public Camera cutsceneCamera;
+    public SC_FPSController playerScript;
+    public MonoBehaviour kasur;
+    public AudioSource audioscource;
     private bool cutscenePlaying = false;
-    private Vector3 originalCameraPosition;
-    private Quaternion originalCameraRotation;
-    private bool cutsceneSkipped = false;
+    private bool canSkip = false;
+    private bool hasPlayed = false; // Tambahkan variabel ini untuk mengecek apakah timeline sudah diputar
 
     void Start()
     {
-        // Simpan posisi dan rotasi kamera asli
-        originalCameraPosition = mainCamera.transform.position;
-        originalCameraRotation = mainCamera.transform.rotation;
+        if (timeline == null)
+        {
+            timeline = GetComponent<PlayableDirector>();
+        }
+
+        timeline.stopped += OnTimelineStopped;
     }
 
     void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("MainCamera") && !cutscenePlaying) // Cek apakah cutscene sedang diputar
+        if (other.CompareTag("MainCamera") && !cutscenePlaying)
         {
             intText.SetActive(true);
+            exhaustionText.SetActive(true);
             interactable = true;
         }
     }
@@ -41,93 +46,99 @@ public class tidur : MonoBehaviour
         if (other.CompareTag("MainCamera"))
         {
             intText.SetActive(false);
+            exhaustionText.SetActive(false);
             interactable = false;
         }
     }
 
     void Update()
     {
-        if (interactable && !cutscenePlaying)
+        if (interactable && !cutscenePlaying && !hasPlayed) // Cek apakah timeline belum diputar
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                StartCoroutine(PlayCutscene());
+                PlayTimeline();
             }
         }
 
-        if (cutscenePlaying && !cutsceneSkipped && Input.GetKeyDown(KeyCode.Space))
+        if (cutscenePlaying && canSkip && Input.GetKeyDown(KeyCode.Space))
         {
-            SkipCutscene();
+            StartCoroutine(SkipTimeline());
         }
     }
 
-    IEnumerator PlayCutscene()
+    void PlayTimeline()
     {
-        cutscenePlaying = true;
-        cutsceneSkipped = false;
-
-        // Nonaktifkan pergerakan pemain dan ubah kamera
-        if (SC_FPSController != null)
-            SC_FPSController.enabled = false;
-
-        if (cutsceneCamera != null)
+        if (!cutscenePlaying && !hasPlayed) // Pastikan timeline belum diputar
         {
-            mainCamera.gameObject.SetActive(false);
+            hasPlayed = true; // Set agar timeline tidak bisa diputar lagi
+            cutscenePlaying = true;
+            timeline.Play();
+            DisablePlayerMovement();
             cutsceneCamera.gameObject.SetActive(true);
+            mainCamera.gameObject.SetActive(false);
+            intText.SetActive(false);
+            exhaustionText.SetActive(false);
+            StartCoroutine(AllowSkipAfterDelay());
         }
+    }
 
-        // Nonaktifkan teks interaksi saat cutscene diputar
-        intText.SetActive(false);
+    IEnumerator AllowSkipAfterDelay()
+    {
+        yield return new WaitForSeconds(5f);
+        canSkip = true; // Mengizinkan skip setelah 5 detik
+    }
 
-        // Mulai cutscene
-        cutsceneDirector.Play();
-
-        // Tunggu durasi cutscene sebelum bisa dilewati
-        yield return new WaitForSeconds(cutsceneDuration);
-
-        // Jika cutscene tidak dilewati, langsung kembali ke kondisi normal
-        if (!cutsceneSkipped)
+    void DisablePlayerMovement()
+    {
+        if (playerScript != null)
         {
+            playerScript.enabled = false;
+            audioscource.enabled = false;
+        }
+    }
+
+    void EnablePlayerMovement()
+    {
+        if (playerScript != null)
+        {
+            playerScript.enabled = true;
+            audioscource.enabled = true;
+            laci.enabled = true;
+            laci2.enabled = true;
+            meja.enabled = true;
+            lemari1.enabled = true;
+            lemari2.enabled = true;
+            laci4.enabled = true;
+            kasur2.SetActive(true);
+            kasur.enabled = true;
+            kasur3.enabled = false;
+        }
+    }
+
+    private void OnTimelineStopped(PlayableDirector director)
+    {
+        EndCutscene();
+    }
+
+    IEnumerator SkipTimeline()
+    {
+        if (timeline.state == PlayState.Playing) // Pastikan timeline sedang berjalan
+        {
+            timeline.time = timeline.duration;
+            timeline.Evaluate();
             EndCutscene();
         }
-    }
-
-    void SkipCutscene()
-    {
-        cutsceneSkipped = true;
-        cutsceneDirector.Stop(); // Hentikan cutscene
-        EndCutscene();
+        yield return null;
     }
 
     void EndCutscene()
     {
-        cutscenePlaying = false;
-
-        // Kembalikan kamera ke posisi semula
-        if (cutsceneCamera != null)
-        {
-            cutsceneCamera.gameObject.SetActive(false);
-            mainCamera.gameObject.SetActive(true);
-            mainCamera.transform.position = originalCameraPosition;
-            mainCamera.transform.rotation = originalCameraRotation;
-        }
-
-        // Aktifkan kembali pergerakan pemain
-        if (SC_FPSController != null)
-            SC_FPSController.enabled = true;
-
-        // Aktifkan kembali pintu
-        laci.enabled = true;
-        laci2.enabled = true;
-        meja.enabled = true;
-        lemari1.enabled = true;
-        lemari2.enabled = true;
-        laci4.enabled = true;
-
-        // Set dialogPintu dan barang yang diatur sebelumnya
+        cutsceneCamera.gameObject.SetActive(false);
+        mainCamera.gameObject.SetActive(true);
+        EnablePlayerMovement();
         dialogPintu.hasTuru = true;
-
-        // Aktifkan teks interaksi setelah cutscene selesai
-        intText.SetActive(true);
+        cutscenePlaying = false;
+        canSkip = false;
     }
 }

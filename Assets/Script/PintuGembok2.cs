@@ -11,6 +11,7 @@ public class PintuGembok2 : MonoBehaviour
     public GameObject intText;
     public GameObject DialogBG;
     public MonoBehaviour SC_FPSController;
+    public Pause pauseScript;
     public AudioSource audioSource;
     public AudioSource audioSource2;
     public AudioClip openSound;
@@ -70,6 +71,7 @@ public class PintuGembok2 : MonoBehaviour
         index = NumberDialog;
         isDialogueActive = true; // Tandai dialog sedang aktif
         SC_FPSController.enabled = false; // Nonaktifkan movement player
+        if (pauseScript != null) pauseScript.enabled = false; 
         audioSource.enabled = false;
         intText.SetActive(false); // Matikan intText saat dialog aktif
         DialogBG.SetActive(true);
@@ -105,6 +107,7 @@ public class PintuGembok2 : MonoBehaviour
             isDialogueActive = false; // Tandai dialog selesai
             textComponent.text = string.Empty; 
             SC_FPSController.enabled = true; // Aktifkan kembali kontrol pemain
+            if (pauseScript != null) pauseScript.enabled = true;
             audioSource.enabled = true;
             DialogBG.SetActive(false); // Sembunyikan background dialog
 

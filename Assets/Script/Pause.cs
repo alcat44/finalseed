@@ -10,41 +10,43 @@ public class Pause : MonoBehaviour
     public string sceneName;
     public bool toggle;
     public SC_FPSController playerScript;
+    public AudioSource audioSource;
 
-    // Start is called before the first frame update
-    void Awake()
-    {
-        playerScript.enabled = true;
-    }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             toggle = !toggle;
-            if(toggle == false)
+
+            if (toggle == false)
             {
                 Pausemenu.SetActive(false);
                 Time.timeScale = 1;
                 playerScript.enabled = true;
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
+                audioSource.enabled = true;
+                Cursor.visible = false;  // Pastikan kursor tersembunyi ketika game berjalan
+                Cursor.lockState = CursorLockMode.Locked;  // Kunci kursor dalam game
             }
-            if(toggle == true)
+            else
             {
                 Pausemenu.SetActive(true);
                 Time.timeScale = 0;
                 playerScript.enabled = false;
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
+                audioSource.enabled = false;
+                Cursor.visible = true;  // Tampilkan kursor di menu pause
+                Cursor.lockState = CursorLockMode.None;  // Bebaskan kursor
             }
         }
     }
+
+
     public void resumeGame()
     {
         toggle = false;
         Pausemenu.SetActive(false);
         Time.timeScale = 1;
         playerScript.enabled = true;
+        audioSource.enabled = true;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -52,6 +54,7 @@ public class Pause : MonoBehaviour
     {
         SceneManager.LoadScene(sceneName);
         playerScript.enabled = true;
+        audioSource.enabled = true;
         Time.timeScale = 1;
     }
     public void Exit()

@@ -62,6 +62,7 @@ public class DoorTimeline : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
+                
                 toggle = !toggle;
                 if (toggle == true)
                 {

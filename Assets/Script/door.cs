@@ -13,7 +13,8 @@ public class Door : MonoBehaviour
     public Collider Object;
 
     private bool isEnemyNearby = false; // To check if the enemy is already near the door
-    private bool isActionInProgress = false; // Flag to prevent spam triggering
+    // Hapus flag isActionInProgress untuk mengizinkan interaksi berulang
+    // private bool isActionInProgress = false; 
 
     void OnTriggerStay(Collider other)
     {
@@ -25,7 +26,7 @@ public class Door : MonoBehaviour
         }
 
         // Enemy interaction (using "Enemy" tag)
-        if (other.CompareTag("Enemy") && !isActionInProgress)
+        if (other.CompareTag("Enemy"))
         {
             if (!toggle && !isEnemyNearby)
             {
@@ -45,7 +46,7 @@ public class Door : MonoBehaviour
         }
 
         // Enemy exits trigger (using "Enemy" tag)
-        if (other.CompareTag("Enemy") && !isActionInProgress)
+        if (other.CompareTag("Enemy"))
         {
             if (toggle && isEnemyNearby)
             {
@@ -58,46 +59,58 @@ public class Door : MonoBehaviour
     void Update()
     {
         // Player manual interaction (using Key "E")
-        if (interactable == true && !isActionInProgress)
+        if (interactable)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
                 toggle = !toggle;
-                if (toggle == true)
+                Debug.Log("Tombol E ditekan. toggle: " + toggle);
+
+                if (toggle)
                 {
+                    Debug.Log("Membuka pintu.");
                     StartCoroutine(OpenDoor());
                 }
                 else
                 {
+                    Debug.Log("Menutup pintu.");
                     StartCoroutine(CloseDoor());
                 }
-                intText.SetActive(false);
-                interactable = false;
+                // Tetap aktifkan teks interaksi agar dapat diinteraksi kembali
             }
         }
     }
 
     IEnumerator OpenDoor()
     {
-        isActionInProgress = true; // Set the flag to prevent action spam
+        // isActionInProgress tidak digunakan lagi
+        Debug.Log("Animasi membuka pintu dimulai.");
         doorAnim.ResetTrigger("close");
         doorAnim.SetTrigger("open");
         audioSource.PlayOneShot(openSound);
         Object.enabled = true;
         toggle = true;
-        yield return new WaitForSeconds(1f); // Delay to prevent spam (adjust the delay as needed)
-        isActionInProgress = false; // Reset the flag after door fully opens
+        yield return null; // Tidak perlu menunggu penuh
+        Debug.Log("Animasi membuka pintu selesai.");
     }
 
     IEnumerator CloseDoor()
     {
-        isActionInProgress = true; // Set the flag to prevent action spam
+        // isActionInProgress tidak digunakan lagi
+        Debug.Log("Animasi menutup pintu dimulai.");
         doorAnim.ResetTrigger("open");
         doorAnim.SetTrigger("close");
         audioSource.PlayOneShot(closeSound);
         Object.enabled = false;
         toggle = false;
-        yield return new WaitForSeconds(1f); // Delay to prevent spam (adjust the delay as needed)
-        isActionInProgress = false; // Reset the flag after door fully closes
+        yield return null; // Tidak perlu menunggu penuh
+        Debug.Log("Animasi menutup pintu selesai.");
+    }
+
+    public void ResetInteraction()
+    {
+        intText.SetActive(false); // Make sure interaction text is off
+        interactable = false; // Reset interactable flag
+        Debug.Log("Interaction reset after player respawn.");
     }
 }
