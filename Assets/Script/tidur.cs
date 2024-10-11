@@ -61,7 +61,7 @@ public class tidur : MonoBehaviour
             }
         }
 
-        if (cutscenePlaying && canSkip && Input.GetKeyDown(KeyCode.Space))
+        if (cutscenePlaying && canSkip && Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(SkipTimeline());
         }

@@ -27,13 +27,15 @@ public class enemyAI1 : MonoBehaviour
     public GameObject stopHide;
     public float aiDistance;
     public bool isDead;
+    public static bool isChasing;
     public Image fadeImage;
     public float fadeDuration = 1f;
 
-    // Audio source dan clip untuk walking dan running
-    public AudioSource audioSource;
-    public AudioClip walkClip;
-    public AudioClip runClip;
+    public AudioManager Audio;
+    private AudioSource audioSource;
+    private string previousAnimationState;
+
+    public GameOverManager gameOverManager;
     
 
     void Start()
@@ -49,8 +51,8 @@ public class enemyAI1 : MonoBehaviour
         jumpscareCamera.SetActive(false);
         mainCamera.SetActive(true);  // Pastikan kamera utama aktif
 
-        // Pastikan AudioSource tidak memutar suara apapun saat awal
-        audioSource.Stop();
+        audioSource = GetComponent<AudioSource>();
+
     }
 
     void Update()
@@ -66,18 +68,26 @@ public class enemyAI1 : MonoBehaviour
         {
             if (hit.collider.gameObject.tag == "Player")
             {
-                Debug.Log("Player detected!");
-                walking = false;
-                StopAllCoroutines();
-                StartCoroutine(searchRoutine());
-                searching = true;
+                // Cek apakah kita belum dalam kondisi searching atau chasing untuk mencegah pemutaran suara berulang kali
+                if (!searching && !chasing)
+                {
+                    Debug.Log("Player detected!");
+                    walking = false;
+                    StopAllCoroutines();
+                    StartCoroutine(searchRoutine());
+                    searching = true;
+                    Audio.SFXSource.Stop();  // Stop all previous sounds before starting search
+
+                    // Memainkan suara pencarian
+                    Audio.sfx6();
+                    previousAnimationState = "search";
+                }
             }
         }
 
-        if (searching == true)
+        if (searching)
         {
             ai.speed = 0;
-            StopAudio();  // Stop audio saat AI berhenti
             aiAnim.ResetTrigger("walk");
             aiAnim.ResetTrigger("idle");
             aiAnim.ResetTrigger("sprint");
@@ -89,19 +99,33 @@ public class enemyAI1 : MonoBehaviour
                 StartCoroutine(chaseRoutine());
                 chasing = true;
                 searching = false;
+                Audio.bgm();  // Mainkan BGM chasing
             }
         }
 
-        if (chasing == true)
+        if (chasing)
         {
+            // Mulai mengejar player
             dest = player.position;
             ai.destination = dest;
             ai.speed = chaseSpeed;
-            PlayRunSound();  // Mainkan suara berlari
+
             aiAnim.ResetTrigger("walk");
             aiAnim.ResetTrigger("idle");
             aiAnim.ResetTrigger("search");
             aiAnim.SetTrigger("sprint");
+
+            // Pastikan suara chasing hanya diputar sekali
+            if (previousAnimationState != "sprint")
+            {
+                Audio.SFXSource.Stop();  // Pastikan suara lain berhenti sebelum memulai sprint SFX
+
+                // Mainkan SFX untuk sprint
+                Audio.sfx2();  // Suara berjalan/motorik
+                Audio.sfx5();  // Suara tertawa atau efek lain selama chasing
+
+                previousAnimationState = "sprint";
+            }
 
             if (aiDistance <= catchDistance)
             {
@@ -109,6 +133,7 @@ public class enemyAI1 : MonoBehaviour
                 StopAllCoroutines();
                 StartCoroutine(deathRoutine());
                 chasing = false;
+                Audio.Chasemusicbg.Stop();
             }
         }
 
@@ -117,19 +142,35 @@ public class enemyAI1 : MonoBehaviour
             dest = currentDest.position;
             ai.destination = dest;
             ai.speed = walkSpeed;
-            PlayWalkSound();  // Mainkan suara berjalan
             aiAnim.ResetTrigger("sprint");
             aiAnim.ResetTrigger("idle");
             aiAnim.ResetTrigger("search");
             aiAnim.SetTrigger("walk");
 
+            // Memastikan hanya memutar suara langkah jika belum diputar
+            if (previousAnimationState != "walk")
+            {
+                Audio.SFXSource.Stop();  // Hentikan suara sebelumnya jika ada
+                Audio.sfx1();  // Memutar suara langkah kaki
+                previousAnimationState = "walk";
+            }
+
+            // Jika sudah mencapai tujuan, AI berhenti dan masuk ke state idle
             if (ai.remainingDistance <= ai.stoppingDistance)
             {
                 aiAnim.ResetTrigger("walk");
                 aiAnim.SetTrigger("idle");
                 ai.speed = 0;
-                StopAudio();  // Stop audio saat AI berhenti
-                StartCoroutine(stayIdle());
+
+                // Memastikan hanya memutar suara idle jika belum diputar
+                if (previousAnimationState != "idle")
+                {
+                    Audio.SFXSource.Stop();  // Hentikan semua suara langkah
+                    Audio.sfx4();  // Memutar suara tawa idle
+                    previousAnimationState = "idle";
+                }
+
+                StartCoroutine(stayIdle());  // AI berhenti sejenak
                 walking = false;
             }
         }
@@ -139,19 +180,26 @@ public class enemyAI1 : MonoBehaviour
     {
         walking = true;
         chasing = false;
+        isChasing = false;  // Set isChasing to false saat musuh berhenti mengejar
         StopAllCoroutines();
         currentDest = destinations[Random.Range(0, destinations.Count)];
         ai.destination = currentDest.position;
+        Audio.Chasemusicbg.Stop();
     }
+
 
     IEnumerator stayIdle()
     {
+
         idleTime = Random.Range(minIdleTime, maxIdleTime);
         yield return new WaitForSeconds(idleTime);
+
         walking = true;
         currentDest = destinations[Random.Range(0, destinations.Count)];
         ai.destination = currentDest.position;
+        Audio.Chasemusicbg.Stop();
     }
+
 
     IEnumerator searchRoutine()
     {
@@ -160,15 +208,19 @@ public class enemyAI1 : MonoBehaviour
         walking = true;
         currentDest = destinations[Random.Range(0, destinations.Count)];
         ai.destination = currentDest.position;
+        Audio.Chasemusicbg.Stop();
     }
 
     IEnumerator chaseRoutine()
     {
+        isChasing = true;  // Set isChasing to true saat musuh mulai mengejar
         yield return new WaitForSeconds(Random.Range(minChaseTime, maxChaseTime));
         stopChase();
+        Audio.Chasemusicbg.Stop();
     }
 
-    IEnumerator deathRoutine()
+
+   IEnumerator deathRoutine()
     {
         exhaustionText.SetActive(false);
         intText.SetActive(false);
@@ -179,18 +231,27 @@ public class enemyAI1 : MonoBehaviour
         mainCamera.SetActive(false);
         jumpscareCamera.SetActive(true);
         stopHide.SetActive(false);
-
-        // Pastikan animasi jumpscare diputar
+        Audio.SFXSource.Stop();
         Debug.Log("Jumpscare triggered!");
         aiAnim.SetTrigger("jumpscare");
+        Audio.sfx3();
 
-        // Tunggu durasi jumpscare
         yield return new WaitForSeconds(jumpscareTime);
 
         // Mulai fade-out (menuju hitam penuh)
         yield return StartCoroutine(FadeOut());
+        Audio.Chasemusicbg.Stop();
 
-        // Respawn player dan musuh
+        // Panggil PlayerRespawned di sini, agar hanya dihitung setelah jumpscare selesai
+        gameOverManager.PlayerRespawned();
+
+        // Cek apakah game over, jika ya, hentikan eksekusi deathRoutine
+        if (gameOverManager.isGameOver)
+        {
+            yield break;  // Stop jika sudah game over
+        }
+
+        // Respawn player dan musuh hanya jika belum game over
         Debug.Log("Respawning player...");
         player.position = respawnPoint.position;
         transform.rotation = Quaternion.Euler(respawnRotation);
@@ -202,10 +263,40 @@ public class enemyAI1 : MonoBehaviour
             door.ResetInteraction(); // Call reset on each door
         }
 
+        DropArea dropArea = FindObjectOfType<DropArea>(); // Ini akan langsung mencari DropArea yang ada di scene
+        if (dropArea != null)
+        {
+            dropArea.ResetInteraction(); // Memanggil fungsi ResetInteraction di script DropArea
+        }
+
+        Doorpickable[] doorPickables = FindObjectsOfType<Doorpickable>(); // Temukan semua Doorpickable
+        foreach (Doorpickable doorPickable in doorPickables)
+        {
+            doorPickable.ResetInteraction(); // Panggil reset pada setiap Doorpickable
+        }
+
         DialogText[] allDialogs = FindObjectsOfType<DialogText>();
         foreach (DialogText dialog in allDialogs)
         {
             dialog.ResetDialog();
+        }
+
+        DialogNormal[] allDialogsNormal = FindObjectsOfType<DialogNormal>();
+        foreach (DialogNormal dialogNormal in allDialogsNormal)
+        {
+            dialogNormal.ResetDialog();
+        }
+
+        PintuGembok[] allPintuGembok = FindObjectsOfType<PintuGembok>();
+        foreach (PintuGembok pintuGembok in allPintuGembok)
+        {
+            pintuGembok.ResetDialog();
+        }
+
+        PintuGembok2[] allPintuGembok2 = FindObjectsOfType<PintuGembok2>();
+        foreach (PintuGembok2 pintuGembok2 in allPintuGembok2)
+        {
+            pintuGembok2.ResetDialog();
         }
 
         // Reset hiding setelah respawn
@@ -214,7 +305,6 @@ public class enemyAI1 : MonoBehaviour
         {
             hideSpot.ResetHiding();
         }
-
 
         // Reset gerakan player
         SC_FPSController playerController = player.GetComponent<SC_FPSController>();
@@ -225,8 +315,6 @@ public class enemyAI1 : MonoBehaviour
 
         Debug.Log("Respawning enemy...");
         transform.position = enemyRespawnPoint.position;
-
-        
 
         // Nonaktifkan kamera jumpscare dan aktifkan kembali kamera utama
         jumpscareCamera.SetActive(false);
@@ -243,12 +331,14 @@ public class enemyAI1 : MonoBehaviour
 
         // Reset state AI ke keadaan awal
         ResetAIState();
+        Audio.SFXSource.Stop();
 
         // Mulai fade-in (layar hitam perlahan menghilang)
         yield return StartCoroutine(FadeIn());
 
         isDead = false;  // Izinkan Update() berjalan lagi
     }
+
 
 
     void ResetAIState()
@@ -306,37 +396,6 @@ public class enemyAI1 : MonoBehaviour
         Color color = fadeImage.color;
         color.a = alpha;
         fadeImage.color = color;
-    }
-
-    void PlayWalkSound()
-    {
-        if (audioSource.clip != walkClip || !audioSource.isPlaying)
-        {
-            audioSource.Stop(); // Pastikan audio sebelumnya berhenti
-            audioSource.clip = walkClip;
-            audioSource.loop = true;
-            audioSource.Play();
-        }
-    }
-
-    // Fungsi untuk memutar suara berlari
-    void PlayRunSound()
-    {
-        if (audioSource.clip != runClip || !audioSource.isPlaying)
-        {
-            audioSource.Stop(); // Pastikan audio sebelumnya berhenti
-            audioSource.clip = runClip;
-            audioSource.loop = true;
-            audioSource.Play();
-        }
-    }
-
-    void StopAudio()
-    {
-        if (audioSource.isPlaying)
-        {
-            audioSource.Stop();
-        }
     }
 
 }

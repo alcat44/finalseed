@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PintuLocked : MonoBehaviour
 {
-    public Door doorScript; // Reference to the Door script
+    public DoorUtama doorScript; // Reference to the Door script
     public Collider doorCollider; // Collider to be deactivated after closing the door
     public Collider doorCollider2;
     public GameObject Gembok;
@@ -28,7 +28,7 @@ public class PintuLocked : MonoBehaviour
 
                 // Update the door's toggle state to closed
                 doorScript.toggle = false;
-                Destroy(trigger);
+                trigger.SetActive(false);
             }
         }
     }

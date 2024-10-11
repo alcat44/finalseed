@@ -1391,7 +1391,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1062935580941385772}
   - component: {fileID: 5347737611006664070}
-  - component: {fileID: 2031857591935323132}
   - component: {fileID: 896058127151922296}
   - component: {fileID: 8510175169814901166}
   m_Layer: 0
@@ -1440,57 +1439,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2031857591935323132
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6844833019435976457}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f58e6413a2fca5a4bbbbefe84109c3ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ai: {fileID: 896058127151922296}
-  destinations:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  aiAnim: {fileID: 5347737611006664070}
-  walkSpeed: 2
-  chaseSpeed: 5
-  minIdleTime: 2
-  maxIdleTime: 4
-  idleTime: 0
-  detectionDistance: 14
-  catchDistance: 3
-  searchDistance: 10
-  minChaseTime: 10
-  maxChaseTime: 25
-  minSearchTime: 3
-  maxSearchTime: 10
-  jumpscareTime: 2
-  walking: 0
-  chasing: 0
-  searching: 0
-  player: {fileID: 0}
-  rayCastOffset: {x: 0, y: 0, z: 0}
-  deathScene: SampleScene
-  aiDistance: 0
-  mainCamera: {fileID: 0}
-  jumpscareCamera: {fileID: 1347370778131034759}
 --- !u!195 &896058127151922296
 NavMeshAgent:
   m_ObjectHideFlags: 0

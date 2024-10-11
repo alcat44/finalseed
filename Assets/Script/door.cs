@@ -10,11 +10,10 @@ public class Door : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip openSound;
     public AudioClip closeSound;
-    public Collider Object;
+    public Collider doorCollider; // Collider pintu
+    public Collider doorCollider2; // Collider pintu kedua
 
     private bool isEnemyNearby = false; // To check if the enemy is already near the door
-    // Hapus flag isActionInProgress untuk mengizinkan interaksi berulang
-    // private bool isActionInProgress = false; 
 
     void OnTriggerStay(Collider other)
     {
@@ -64,53 +63,88 @@ public class Door : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 toggle = !toggle;
-                Debug.Log("Tombol E ditekan. toggle: " + toggle);
+                interactable = false;   // Set interactable to false when pressing E
+                intText.SetActive(false); // Hide interaction text when pressing E
 
                 if (toggle)
                 {
-                    Debug.Log("Membuka pintu.");
                     StartCoroutine(OpenDoor());
                 }
                 else
                 {
-                    Debug.Log("Menutup pintu.");
                     StartCoroutine(CloseDoor());
                 }
-                // Tetap aktifkan teks interaksi agar dapat diinteraksi kembali
             }
         }
     }
 
     IEnumerator OpenDoor()
     {
-        // isActionInProgress tidak digunakan lagi
-        Debug.Log("Animasi membuka pintu dimulai.");
         doorAnim.ResetTrigger("close");
         doorAnim.SetTrigger("open");
         audioSource.PlayOneShot(openSound);
-        Object.enabled = true;
+
+        // Dinonaktifkan selama animasi
+        if (doorCollider != null)
+        {
+            doorCollider.enabled = false;
+        }
+        if (doorCollider2 != null)
+        {
+            doorCollider2.enabled = false;
+        }
+
+        // Tunggu hingga animasi selesai
+        yield return new WaitForSeconds(doorAnim.GetCurrentAnimatorStateInfo(0).length);
+
+        // Diaktifkan kembali setelah animasi selesai
+        if (doorCollider != null)
+        {
+            doorCollider.enabled = true;
+        }
+        if (doorCollider2 != null)
+        {
+            doorCollider2.enabled = true;
+        }
+
         toggle = true;
-        yield return null; // Tidak perlu menunggu penuh
-        Debug.Log("Animasi membuka pintu selesai.");
     }
 
     IEnumerator CloseDoor()
     {
-        // isActionInProgress tidak digunakan lagi
-        Debug.Log("Animasi menutup pintu dimulai.");
         doorAnim.ResetTrigger("open");
         doorAnim.SetTrigger("close");
         audioSource.PlayOneShot(closeSound);
-        Object.enabled = false;
+
+        // Dinonaktifkan selama animasi
+        if (doorCollider != null)
+        {
+            doorCollider.enabled = false;
+        }
+        if (doorCollider2 != null)
+        {
+            doorCollider2.enabled = false;
+        }
+
+        // Tunggu hingga animasi selesai
+        yield return new WaitForSeconds(doorAnim.GetCurrentAnimatorStateInfo(0).length);
+
+        // Diaktifkan kembali setelah animasi selesai
+        if (doorCollider != null)
+        {
+            doorCollider.enabled = true;
+        }
+        if (doorCollider2 != null)
+        {
+            doorCollider2.enabled = true;
+        }
+
         toggle = false;
-        yield return null; // Tidak perlu menunggu penuh
-        Debug.Log("Animasi menutup pintu selesai.");
     }
 
     public void ResetInteraction()
     {
         intText.SetActive(false); // Make sure interaction text is off
-        interactable = false; // Reset interactable flag
-        Debug.Log("Interaction reset after player respawn.");
+        interactable = false;     // Reset interactable flag
     }
 }

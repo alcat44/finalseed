@@ -10,6 +10,9 @@ public class Timline2 : MonoBehaviour
     public GameObject Camera2;
     public GameObject colliderObject; // Menambahkan referensi ke objek collider
     public GameObject exhaustionText;
+    public GameObject Key1;
+    public GameObject Key2;
+    public GameObject livesText;
     public SC_FPSController playerScript;
     public AudioSource audioscource;
     public enemyAI1 enemyScript;
@@ -52,7 +55,7 @@ public class Timline2 : MonoBehaviour
     void Update()
     {
         // Mengecek apakah tombol 'Spacebar' ditekan untuk melewatkan timeline
-        if (canSkip && Input.GetKeyDown(KeyCode.Space))
+        if (canSkip && Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(SkipTimeline());
         }
@@ -105,6 +108,9 @@ public class Timline2 : MonoBehaviour
         // Mengembalikan kamera ke Camera1 dan menghilangkan SkipButton
         Camera1.SetActive(true);
         Camera2.SetActive(false);
+        Key1.SetActive(true);
+        Key2.SetActive(true);
+        livesText.SetActive(true);
         EnablePlayerMovement();
         Door1.enabled = true;
         Door2.enabled = true;

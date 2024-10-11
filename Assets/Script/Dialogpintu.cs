@@ -24,6 +24,7 @@ public class Dialogpintu : MonoBehaviour
     public AudioSource doorSFX;
     public bool hasKey = false; // Tandai apakah pemain sudah memiliki kunci
     public bool hasTuru = false;
+    private bool isTransitioning = false;
 
     void Start()
     {
@@ -42,16 +43,22 @@ public class Dialogpintu : MonoBehaviour
             NumberDialog = 0; // Jika hasTuru false, dialog mulai dari index 0
         }
 
-        // Jika pemain sudah berinteraksi dengan "Kunci" dan menekan E, ganti scene
-        if (hasKey && Input.GetKeyDown(KeyCode.E) && interactable)
+         if (hasKey && interactable && !isTransitioning && Input.GetKeyDown(KeyCode.E))
         {
-            StartCoroutine(TransitionToScene("SampleScene")); // Ganti "SampleScene" dengan nama scene tujuan
+            // Set flag to true to prevent further interaction
+            isTransitioning = true;
 
-            return;
+            // Disable further interactions and hide intText
+            interactable = false;
+            intText.SetActive(false);
+
+            // Start the scene transition coroutine
+            StartCoroutine(TransitionToScene("SampleScene"));
+            return; // Return here to avoid executing dialog-related code during scene transition
         }
 
-        // Hanya memungkinkan interaksi jika pemain berada di area trigger dan dialog belum aktif
-        if (interactable && !isDialogActive && Input.GetKeyDown(KeyCode.E))
+        // Logika dialog hanya berjalan jika scene transition tidak sedang terjadi
+        if (!isTransitioning && interactable && !isDialogActive && Input.GetKeyDown(KeyCode.E))
         {
             StartDialog();
         }

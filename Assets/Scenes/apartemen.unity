@@ -230,6 +230,11 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &68347324 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2787814584346731069, guid: e9c5f6b2932621440a56142a06715ef1, type: 3}
+  m_PrefabInstance: {fileID: 407078183}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &82860328
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,6 +599,8 @@ MonoBehaviour:
   openSound: {fileID: 8300000, guid: 894921a066f58ba4199c2724969dd6d7, type: 3}
   closeSound: {fileID: 8300000, guid: b63f220321829a74aab2a9daf723323b, type: 3}
   Timeline: {fileID: 0}
+  doorCollider: {fileID: 0}
+  doorCollider2: {fileID: 0}
 --- !u!54 &163891521
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2394,7 +2401,8 @@ MonoBehaviour:
   audioSource: {fileID: 643540639}
   openSound: {fileID: 8300000, guid: 4accfe74cb8446441aaec19371716288, type: 3}
   closeSound: {fileID: 8300000, guid: 4accfe74cb8446441aaec19371716288, type: 3}
-  Object: {fileID: 0}
+  doorCollider: {fileID: 7337715913700553457}
+  doorCollider2: {fileID: 4416674143245672447}
 --- !u!54 &643540641
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2448,17 +2456,24 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 431179081694188235, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
   m_PrefabInstance: {fileID: 2072158052}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &683731578 stripped
+--- !u!114 &683731583
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 502491468347780094, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
-  m_PrefabInstance: {fileID: 2072158052}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 683731577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca6d75629fa1b6e48b745574da0d0aad, type: 3}
+  m_Script: {fileID: 11500000, guid: d168540d4b8b03b49b17b68ba33ad958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Pausemenu: {fileID: 1862888301}
+  howToPlayCanvas: {fileID: 1512051657}
+  sceneName: MenuAwal
+  toggle: 0
+  playerScript: {fileID: 253504532}
+  audioSource: {fileID: 253504529}
 --- !u!1001 &699181307
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3063,7 +3078,8 @@ MonoBehaviour:
   audioSource: {fileID: 989323426}
   openSound: {fileID: 8300000, guid: 4accfe74cb8446441aaec19371716288, type: 3}
   closeSound: {fileID: 8300000, guid: 4accfe74cb8446441aaec19371716288, type: 3}
-  Object: {fileID: 0}
+  doorCollider: {fileID: 0}
+  doorCollider2: {fileID: 0}
 --- !u!54 &989323428
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3524,10 +3540,14 @@ PrefabInstance:
     - target: {fileID: 7066345802109612947, guid: 167e00a6f8063c744aaf6a069ef769e5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 683731578}
+      objectReference: {fileID: 683731583}
     - target: {fileID: 7066345802109612947, guid: 167e00a6f8063c744aaf6a069ef769e5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: HideHowToPlay
+      objectReference: {fileID: 0}
+    - target: {fileID: 7066345802109612947, guid: 167e00a6f8063c744aaf6a069ef769e5, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PauseApart, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3707,7 +3727,10 @@ MonoBehaviour:
   textSpeed: 0
   DialogBG: {fileID: 0}
   SC_FPSController: {fileID: 0}
+  playerScript: {fileID: 0}
   pauseScript: {fileID: 0}
+  pintuLockedScript: {fileID: 0}
+  doorScript: {fileID: 0}
   audioSource: {fileID: 0}
   timeline: {fileID: 0}
   player: {fileID: 0}
@@ -3719,7 +3742,11 @@ MonoBehaviour:
   objectToDisable1: {fileID: 0}
   objectToDisable2: {fileID: 0}
   bapakDisable: {fileID: 0}
-  exhaustionText: {fileID: 0}
+  bapakAble: {fileID: 0}
+  countdownText: {fileID: 0}
+  gameOverManager: {fileID: 0}
+  fadeImage: {fileID: 0}
+  fadeDuration: 1
 --- !u!65 &1281275892
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3881,6 +3908,8 @@ MonoBehaviour:
   dropUpwardForce: 7
   equipped: 0
   withinRange: 0
+  isPicked: 0
+  wasPicked: 0
 --- !u!54 &1314539291
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3964,7 +3993,8 @@ MonoBehaviour:
   audioSource: {fileID: 1352216161}
   openSound: {fileID: 8300000, guid: 4accfe74cb8446441aaec19371716288, type: 3}
   closeSound: {fileID: 8300000, guid: 4accfe74cb8446441aaec19371716288, type: 3}
-  Object: {fileID: 0}
+  doorCollider: {fileID: 0}
+  doorCollider2: {fileID: 0}
 --- !u!82 &1352216161
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4422,7 +4452,7 @@ GameObject:
   - component: {fileID: 1569105168}
   - component: {fileID: 1569105167}
   - component: {fileID: 1569105166}
-  - component: {fileID: 1569105165}
+  - component: {fileID: 1569105171}
   m_Layer: 0
   m_Name: triggerkasurafter
   m_TagString: Untagged
@@ -4430,32 +4460,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1569105165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1569105164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03c984f92a202b74d9d95b0a8f03f1e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textComponent: {fileID: 1849411760}
-  intText: {fileID: 1801080727}
-  lines:
-  - 
-  - ini bukan waktunya untuk tidar
-  textSpeed: 0
-  interactable: 0
-  SC_FPSController: {fileID: 253504532}
-  pauseScript: {fileID: 683731578}
-  door: {fileID: 0}
-  audioSource: {fileID: 253504529}
-  audioSource2: {fileID: 0}
-  LockedSound: {fileID: 0}
-  DialogBG: {fileID: 452020259}
 --- !u!54 &1569105166
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4569,6 +4573,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1569105171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1569105164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84c2587c030b1e24f836715a766ed1da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textComponent: {fileID: 1849411760}
+  intText: {fileID: 1801080727}
+  lines:
+  - 
+  - ini bukan waktunya untuk tidar
+  textSpeed: 0.05
+  interactable: 0
+  SC_FPSController: {fileID: 253504532}
+  pauseScript: {fileID: 0}
+  pauseScript2: {fileID: 683731583}
+  audioSource: {fileID: 253504529}
+  DialogBG: {fileID: 452020259}
 --- !u!1 &1586897692
 GameObject:
   m_ObjectHideFlags: 0
@@ -5043,6 +5071,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1862888301 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8555636698179976216, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+  m_PrefabInstance: {fileID: 2072158052}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1881006527 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6313533511239766320, guid: e9c5f6b2932621440a56142a06715ef1, type: 3}
@@ -5127,7 +5160,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.1
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -5751,6 +5784,54 @@ PrefabInstance:
       propertyPath: howToPlayCanvas
       value: 
       objectReference: {fileID: 1512051657}
+    - target: {fileID: 2038333552207096791, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 683731583}
+    - target: {fileID: 2038333552207096791, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: resumeGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 2038333552207096791, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PauseApart, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2705532345845309598, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 683731583}
+    - target: {fileID: 2705532345845309598, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Mainmenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 2705532345845309598, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PauseApart, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4795080152218037765, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 683731583}
+    - target: {fileID: 4795080152218037765, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Exit
+      objectReference: {fileID: 0}
+    - target: {fileID: 4795080152218037765, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PauseApart, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351523298144232523, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 683731583}
+    - target: {fileID: 6351523298144232523, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowHowToPlay
+      objectReference: {fileID: 0}
+    - target: {fileID: 6351523298144232523, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PauseApart, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 7149096212215530475, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -5835,10 +5916,14 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 502491468347780094, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 431179081694188235, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 683731583}
   m_SourcePrefab: {fileID: 100100000, guid: b07c6ec4369a75a47b6dc2662a3dcde0, type: 3}
 --- !u!1001 &2076624833
 PrefabInstance:
@@ -6002,6 +6087,8 @@ MonoBehaviour:
   dropUpwardForce: 7
   equipped: 0
   withinRange: 0
+  isPicked: 0
+  wasPicked: 0
 --- !u!114 &2117651219 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5713460456696937024, guid: e9c5f6b2932621440a56142a06715ef1, type: 3}
@@ -6443,7 +6530,7 @@ GameObject:
   - component: {fileID: 2398996637400126289}
   - component: {fileID: 1939809596870702685}
   - component: {fileID: 2398996637400126290}
-  - component: {fileID: 2398996637400126291}
+  - component: {fileID: 2398996637400126293}
   - component: {fileID: 2398996637400126292}
   m_Layer: 0
   m_Name: foto emak
@@ -7888,33 +7975,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1587205845900016921, guid: 4dca5377f0ed9ae418c2c201688bfdbf, type: 3}
---- !u!114 &2398996637400126291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 712750835305662792}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03c984f92a202b74d9d95b0a8f03f1e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textComponent: {fileID: 1849411760}
-  intText: {fileID: 1801080727}
-  lines:
-  - 
-  - besok tepat 3 tahun setelah ibu meninggalkanku,
-  - "sakit kepala ibu tidak mau berhenti hingga kematian\_terkhirnya..."
-  textSpeed: 0.05
-  interactable: 0
-  SC_FPSController: {fileID: 253504532}
-  pauseScript: {fileID: 683731578}
-  door: {fileID: 0}
-  audioSource: {fileID: 253504529}
-  audioSource2: {fileID: 0}
-  LockedSound: {fileID: 0}
-  DialogBG: {fileID: 452020259}
 --- !u!54 &2398996637400126292
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7942,6 +8002,31 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &2398996637400126293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712750835305662792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84c2587c030b1e24f836715a766ed1da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textComponent: {fileID: 1849411760}
+  intText: {fileID: 1801080727}
+  lines:
+  - 
+  - besok tepat 3 tahun setelah ibu meninggalkanku,
+  - "sakit kepala ibu tidak mau berhenti hingga kematian\_terkhirnya..."
+  textSpeed: 0.05
+  interactable: 0
+  SC_FPSController: {fileID: 253504532}
+  pauseScript: {fileID: 0}
+  pauseScript2: {fileID: 683731583}
+  audioSource: {fileID: 253504529}
+  DialogBG: {fileID: 452020259}
 --- !u!4 &2504145869525336270
 Transform:
   m_ObjectHideFlags: 0
@@ -8805,7 +8890,7 @@ GameObject:
   - component: {fileID: 6405050251455220637}
   - component: {fileID: 4442388774460268872}
   - component: {fileID: 6474483225420506293}
-  - component: {fileID: 6474483225420506294}
+  - component: {fileID: 6474483225420506296}
   - component: {fileID: 6474483225420506295}
   m_Layer: 0
   m_Name: fotokeluarga
@@ -9812,14 +9897,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3360760f9ec38cc4cac057f9ef307858, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  intText: {fileID: 1801080727}
+  intText: {fileID: 68347324}
   interactable: 0
   toggle: 0
   doorAnim: {fileID: 5124477419903978832}
   audioSource: {fileID: 5124477419903978830}
   openSound: {fileID: 8300000, guid: 5ef57f715ef60434f98d414fd9b3b798, type: 3}
   closeSound: {fileID: 8300000, guid: 3a630cf11db5b79449d03d593a5bea24, type: 3}
-  Object: {fileID: 0}
+  doorCollider: {fileID: 0}
+  doorCollider2: {fileID: 0}
 --- !u!64 &5124477419903978829
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11191,33 +11277,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -721126338491859115, guid: 4dca5377f0ed9ae418c2c201688bfdbf, type: 3}
---- !u!114 &6474483225420506294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4023273630813661016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03c984f92a202b74d9d95b0a8f03f1e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textComponent: {fileID: 1849411760}
-  intText: {fileID: 1801080727}
-  lines:
-  - 
-  - foto ini tepat diambil setelah keluarga kami kaya mendadak,
-  - sepertinya dia memang berusaha keras...
-  textSpeed: 0.05
-  interactable: 0
-  SC_FPSController: {fileID: 253504532}
-  pauseScript: {fileID: 683731578}
-  door: {fileID: 0}
-  audioSource: {fileID: 253504529}
-  audioSource2: {fileID: 0}
-  LockedSound: {fileID: 0}
-  DialogBG: {fileID: 452020259}
 --- !u!54 &6474483225420506295
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11245,6 +11304,31 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6474483225420506296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4023273630813661016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84c2587c030b1e24f836715a766ed1da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textComponent: {fileID: 1849411760}
+  intText: {fileID: 1801080727}
+  lines:
+  - 
+  - foto ini tepat diambil setelah keluarga kami kaya mendadak,
+  - sepertinya dia memang berusaha keras...
+  textSpeed: 0.05
+  interactable: 0
+  SC_FPSController: {fileID: 253504532}
+  pauseScript: {fileID: 0}
+  pauseScript2: {fileID: 683731583}
+  audioSource: {fileID: 253504529}
+  DialogBG: {fileID: 452020259}
 --- !u!4 &6514235055598676809
 Transform:
   m_ObjectHideFlags: 0
@@ -11602,7 +11686,8 @@ MonoBehaviour:
   audioSource: {fileID: 7096078065721763573}
   openSound: {fileID: 8300000, guid: 5ef57f715ef60434f98d414fd9b3b798, type: 3}
   closeSound: {fileID: 8300000, guid: 3a630cf11db5b79449d03d593a5bea24, type: 3}
-  Object: {fileID: 0}
+  doorCollider: {fileID: 0}
+  doorCollider2: {fileID: 0}
 --- !u!82 &7096078065721763573
 AudioSource:
   m_ObjectHideFlags: 0
@@ -12125,7 +12210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec6981edf2ef37439cc4367f3b46958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  intText: {fileID: 1801080727}
+  intText2: {fileID: 68347324}
   interactable: 0
   door: {fileID: 5124477419903978828}
   door2: {fileID: 8535976209164475147}
@@ -12249,7 +12334,8 @@ MonoBehaviour:
   audioSource: {fileID: 7614985628237389886}
   openSound: {fileID: 8300000, guid: 894921a066f58ba4199c2724969dd6d7, type: 3}
   closeSound: {fileID: 8300000, guid: b63f220321829a74aab2a9daf723323b, type: 3}
-  Object: {fileID: 0}
+  doorCollider: {fileID: 7614985628237389884}
+  doorCollider2: {fileID: 0}
 --- !u!65 &7614985628237389884
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13355,7 +13441,8 @@ MonoBehaviour:
   audioSource: {fileID: 8352293445094585546}
   openSound: {fileID: 8300000, guid: 7b7888558e5287045882aa6f95e8a878, type: 3}
   closeSound: {fileID: 8300000, guid: 09b4c70e82779d848ba3a761ec32f43f, type: 3}
-  Object: {fileID: 0}
+  doorCollider: {fileID: 0}
+  doorCollider2: {fileID: 0}
 --- !u!33 &8389753857805510253
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -13662,14 +13749,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3360760f9ec38cc4cac057f9ef307858, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  intText: {fileID: 1801080727}
+  intText: {fileID: 68347324}
   interactable: 0
   toggle: 0
   doorAnim: {fileID: 8535976209164475146}
   audioSource: {fileID: 8535976209164475143}
   openSound: {fileID: 8300000, guid: 5ef57f715ef60434f98d414fd9b3b798, type: 3}
   closeSound: {fileID: 8300000, guid: 3a630cf11db5b79449d03d593a5bea24, type: 3}
-  Object: {fileID: 8894766616450618674}
+  doorCollider: {fileID: 8894766616450618674}
+  doorCollider2: {fileID: 0}
 --- !u!23 &8581163375195961551
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13786,7 +13874,7 @@ MonoBehaviour:
   interactable: 0
   isDialogActive: 0
   SC_FPSController: {fileID: 253504532}
-  pauseScript: {fileID: 683731578}
+  pauseScript: {fileID: 0}
   audioSource: {fileID: 253504529}
   DialogBG: {fileID: 452020259}
   doorSFX: {fileID: 8581163375195961557}
@@ -13969,7 +14057,7 @@ GameObject:
   - component: {fileID: 5876317644923054909}
   - component: {fileID: 8688887222779360089}
   - component: {fileID: 8688887222779360091}
-  - component: {fileID: 8688887222779360090}
+  - component: {fileID: 8688887222779360092}
   m_Layer: 0
   m_Name: Bathroom_Bathtub
   m_TagString: Untagged
@@ -13999,32 +14087,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -757717626621052561, guid: 4dca5377f0ed9ae418c2c201688bfdbf, type: 3}
---- !u!114 &8688887222779360090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8688887222779360088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03c984f92a202b74d9d95b0a8f03f1e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textComponent: {fileID: 1849411760}
-  intText: {fileID: 1801080727}
-  lines:
-  - 
-  - malas gua mandi...
-  textSpeed: 0.05
-  interactable: 0
-  SC_FPSController: {fileID: 253504532}
-  pauseScript: {fileID: 683731578}
-  door: {fileID: 0}
-  audioSource: {fileID: 253504529}
-  audioSource2: {fileID: 0}
-  LockedSound: {fileID: 0}
-  DialogBG: {fileID: 452020259}
 --- !u!54 &8688887222779360091
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14052,6 +14114,30 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &8688887222779360092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8688887222779360088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84c2587c030b1e24f836715a766ed1da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textComponent: {fileID: 1849411760}
+  intText: {fileID: 1801080727}
+  lines:
+  - 
+  - malas gua mandi...
+  textSpeed: 0.05
+  interactable: 0
+  SC_FPSController: {fileID: 253504532}
+  pauseScript: {fileID: 0}
+  pauseScript2: {fileID: 683731583}
+  audioSource: {fileID: 253504529}
+  DialogBG: {fileID: 452020259}
 --- !u!23 &8717257015074003458
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -14361,7 +14447,7 @@ MonoBehaviour:
   textSpeed: 0.05
   interactable: 0
   SC_FPSController: {fileID: 253504532}
-  pauseScript: {fileID: 683731578}
+  pauseScript: {fileID: 0}
   door: {fileID: 8535976209164475147}
   audioSource: {fileID: 253504529}
   DialogBG: {fileID: 452020259}
@@ -14443,14 +14529,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3360760f9ec38cc4cac057f9ef307858, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  intText: {fileID: 1801080727}
+  intText: {fileID: 68347324}
   interactable: 0
   toggle: 0
   doorAnim: {fileID: 8955127429732083963}
   audioSource: {fileID: 8955127429732083961}
   openSound: {fileID: 8300000, guid: 5ef57f715ef60434f98d414fd9b3b798, type: 3}
   closeSound: {fileID: 8300000, guid: 3a630cf11db5b79449d03d593a5bea24, type: 3}
-  Object: {fileID: 0}
+  doorCollider: {fileID: 0}
+  doorCollider2: {fileID: 0}
 --- !u!64 &8955127429732083960
 MeshCollider:
   m_ObjectHideFlags: 0

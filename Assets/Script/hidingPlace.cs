@@ -8,9 +8,13 @@ public class hidingPlace : MonoBehaviour
     public GameObject normalPlayer, hidingPlayer;
     public enemyAI1 monsterScript;
     public Transform monsterTransform;
+    public GameObject kakek; // GameObject for "kakek"
     bool interactable, hiding;
     public float loseDistance;
-
+    
+    // Tambahan untuk delay
+    private bool canExitHiding = false; // Menentukan apakah player sudah bisa keluar dari hiding
+    
     // Cache SC_FPSController dynamically
     private SC_FPSController playerScript;
 
@@ -67,10 +71,19 @@ public class hidingPlace : MonoBehaviour
                 {
                     playerScript.exhaustionText.SetActive(false);
                 }
+
+                // Activate "kakek" if it's assigned
+                if (kakek != null)
+                {
+                    kakek.SetActive(true);
+                }
+
+                // Mulai coroutine untuk delay sebelum bisa keluar dari hiding
+                StartCoroutine(AllowExitAfterDelay(1f)); // 1 detik delay
             }
         }
 
-        if (hiding)
+        if (hiding && canExitHiding) // Cek jika player sedang hiding dan bisa keluar
         {
             if (Input.GetKeyDown(KeyCode.Q))
             {
@@ -78,14 +91,27 @@ public class hidingPlace : MonoBehaviour
                 normalPlayer.SetActive(true);
                 hidingPlayer.SetActive(false);
                 hiding = false;
+                canExitHiding = false; // Reset agar tidak bisa keluar sebelum delay saat hiding berikutnya
 
                 // Handle exhaustion state after exiting hiding
                 if (playerScript != null)
                 {
                     playerScript.ResetPlayerMovement();
                 }
+
+                // Deactivate "kakek" if it's assigned
+                if (kakek != null)
+                {
+                    kakek.SetActive(false);
+                }
             }
         }
+    }
+
+    IEnumerator AllowExitAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        canExitHiding = true; // Setelah delay, player bisa keluar dari hiding
     }
 
     public void ResetHiding()
@@ -93,6 +119,7 @@ public class hidingPlace : MonoBehaviour
         // Reset flags
         interactable = false;
         hiding = false;
+        canExitHiding = false; // Reset agar tidak bisa keluar jika hiding direset
 
         // Ensure player exits hiding mode
         normalPlayer.SetActive(true);
@@ -101,5 +128,11 @@ public class hidingPlace : MonoBehaviour
         // Disable all UI texts related to hiding
         hideText.SetActive(false);
         stopHideText.SetActive(false);
+
+        // Deactivate "kakek" if it's assigned
+        if (kakek != null)
+        {
+            kakek.SetActive(false);
+        }
     }
 }

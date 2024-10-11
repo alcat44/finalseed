@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 9191990329983813996}
   - component: {fileID: 3853148512292134851}
   - component: {fileID: 5620597332499379835}
-  - component: {fileID: 7343662780052412133}
-  - component: {fileID: 7856430373851368150}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -117,80 +115,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.10000002, y: 0.10000002, z: 2.3687503}
   m_Center: {x: 0, y: 0, z: 2.3494902}
---- !u!114 &7343662780052412133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2616672462128190554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b51e829bd4f4f1428954216f2ad3604, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pickupText: {fileID: 0}
-  dropText: {fileID: 0}
-  messageText: {fileID: 0}
-  baju1: {fileID: 0}
-  baju2: {fileID: 0}
-  baju3: {fileID: 0}
-  Lantai21: {fileID: 0}
-  Lantai22: {fileID: 0}
-  Lantai23: {fileID: 0}
-  fotoMakanan: {fileID: 0}
-  cutsceneCanvas: {fileID: 0}
-  successText: {fileID: 0}
-  playerHand: {fileID: 6976176047537525504}
-  baju1Position: {x: 60.78, y: 7.8, z: -4.8}
-  baju2Position: {x: 57.57, y: 7.8, z: -8.5}
-  baju3Position: {x: 63.6, y: 7.8, z: -0.5}
-  isDroppingAtTrigger: 0
-  fotoMakananInstantiated: 0
-  pickupSound: {fileID: 0}
---- !u!114 &7856430373851368150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2616672462128190554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2765c9f2d413a5c49b650460bff98c29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Index: 0
-  id: 0
-  dropIndex: 0
-  item: {fileID: 0}
-  droppedItems: []
-  itemObject: {fileID: 0}
-  itemDrop: {fileID: 0}
-  KerakTelor: {fileID: 0}
-  KertasMusik: {fileID: 0}
-  Ondel: {fileID: 0}
-  ondelboss: {fileID: 0}
-  ondel1: {fileID: 0}
-  ondel2: {fileID: 0}
-  lantai31: {fileID: 0}
-  lantai32: {fileID: 0}
-  lantai33: {fileID: 0}
-  player: {fileID: 6976176047537525504}
-  pintuTerakhir: {fileID: 0}
-  telor: {fileID: 0}
-  kelapa: {fileID: 0}
-  beras: {fileID: 0}
-  itemPlacementPosition: {x: 0, y: 0, z: 0}
-  dropText: {fileID: 0}
-  successText: {fileID: 0}
-  interactable: 0
-  Misi1: 0
-  Misi2: 0
-  Misi3: 0
-  anidio: 0
-  audioSource: {fileID: 0}
-  dropSound: {fileID: 0}
 --- !u!1 &2818260298620699329
 GameObject:
   m_ObjectHideFlags: 0

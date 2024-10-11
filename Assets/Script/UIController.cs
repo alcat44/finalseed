@@ -1,36 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UIController : MonoBehaviour
 {
-    bool UI = false;
-    public GameObject Inventory;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GameObject livesText;  // The UI text object for displaying lives
 
-    // Update is called once per frame
-    void Update()
+    // Function to update livesText based on remaining lives
+    public void UpdateLivesText(int remainingLives)
     {
-        if (UI == false)
+        if (livesText != null)
         {
-            if(Input.GetKeyDown(KeyCode.Tab))
-            {
-                Inventory.SetActive(true);
-                UI = true;
-            }
-        }
-
-        if (UI == true)
-        {
-            if(Input.GetKeyDown(KeyCode.Tab))
-            {
-                Inventory.SetActive(false);
-                UI = false;
-            }
+            livesText.GetComponent<TextMeshProUGUI>().text = remainingLives.ToString();
         }
     }
 }

@@ -13,6 +13,9 @@ public class PickUpController : MonoBehaviour
 
     public bool equipped;
     public bool withinRange;
+    public bool isPicked; // Menandai apakah objek sudah di-pick
+    public bool wasPicked; // Menandakan apakah objek pernah di-pick
+
 
     // Static variable to ensure only one object can be picked up at a time
     public static bool isCarryingObject = false;
@@ -20,6 +23,7 @@ public class PickUpController : MonoBehaviour
     private void Start()
     {
         intText.SetActive(false); // Pastikan intText dimulai dalam keadaan tidak aktif
+        isPicked = false; // Inisialisasi objek belum diambil
 
         if (!equipped)
         {
@@ -36,7 +40,7 @@ public class PickUpController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // Hanya aktifkan intText jika tidak sedang membawa object lain dan item ini belum diambil
-        if (other.CompareTag("MainCamera") && !equipped && !isCarryingObject)
+        if (other.CompareTag("MainCamera") && !equipped && !isCarryingObject && !isPicked)
         {
             intText.SetActive(true);
             withinRange = true;
@@ -56,13 +60,13 @@ public class PickUpController : MonoBehaviour
     private void Update()
     {
         // Hanya ambil object jika pemain berada dalam range, tidak membawa object lain, dan menekan tombol E
-        if (withinRange && Input.GetKeyDown(KeyCode.E) && !isCarryingObject)
+        if (withinRange && Input.GetKeyDown(KeyCode.E) && !isCarryingObject && !isPicked)
         {
             PickUp();
         }
 
-        // Jika pemain sudah mengambil item, tekan tombol F untuk drop
-        if (equipped && Input.GetKeyDown(KeyCode.F))
+        // Cek apakah musuh sedang mengejar, jika iya, drop tidak bisa dilakukan
+        if (equipped && Input.GetKeyDown(KeyCode.F) && !enemyAI1.isChasing)
         {
             Drop();
         }
@@ -86,7 +90,9 @@ public class PickUpController : MonoBehaviour
     private void PickUp()
     {
         equipped = true;
-        isCarryingObject = true; // Tandai bahwa pemain sedang membawa objek
+        isCarryingObject = true; 
+        isPicked = true; // Objek sudah di-pick
+        wasPicked = true; // Tandai objek pernah di-pick
 
         // Menempatkan item di container
         transform.SetParent(gunContainer);
@@ -105,6 +111,7 @@ public class PickUpController : MonoBehaviour
     {
         equipped = false;
         isCarryingObject = false; // Bebaskan pemain untuk mengambil objek lain
+        isPicked = false; // Reset isPicked agar bisa di-pick lagi
 
         // Lepaskan item dari pemain
         transform.SetParent(null);
@@ -123,9 +130,10 @@ public class PickUpController : MonoBehaviour
         // Tambahkan putaran acak
         float random = Random.Range(-1f, 1f);
         rb.AddTorque(new Vector3(random, random, random) * 10);
-
-        // Pastikan object dihapus dengan benar, jika memang ada sistem penghancuran
-        // Destroy(gameObject); // Jika diperlukan untuk menghancurkan objek
     }
 
+    public bool GetIsPicked() // Fungsi untuk mendapatkan status apakah objek sudah di-pick
+    {
+        return isPicked;
+    }
 }

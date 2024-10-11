@@ -102,7 +102,7 @@ public class DialogText : MonoBehaviour
             {
                 intText.SetActive(true);
                 interactable = true;
-                door.enabled = false;
+                if (door != null) door.enabled = false; // Cek apakah door tidak null
             }
         }                                                                           
     }
@@ -114,7 +114,7 @@ public class DialogText : MonoBehaviour
         {
             intText.SetActive(false); // Sembunyikan "Press E"
             interactable = false; // Pemain tidak bisa berinteraksi
-            door.enabled = true;
+            if (door != null) door.enabled = true; // Cek apakah door tidak null
         }
     }
 

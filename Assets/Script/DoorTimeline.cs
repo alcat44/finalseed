@@ -11,6 +11,10 @@ public class DoorTimeline : MonoBehaviour
     public AudioClip openSound;
     public AudioClip closeSound;
     public GameObject Timeline;
+    
+    // Added colliders for the door
+    public Collider doorCollider; 
+    public Collider doorCollider2; 
 
     private bool isEnemyNearby = false; // To check if the enemy is already near the door
     private bool isActionInProgress = false; // Flag to prevent spam triggering
@@ -58,23 +62,32 @@ public class DoorTimeline : MonoBehaviour
     void Update()
     {
         // Player manual interaction (using Key "E")
-        if (interactable == true && !isActionInProgress)
+        if (interactable && !isActionInProgress)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                
                 toggle = !toggle;
-                if (toggle == true)
+                intText.SetActive(false); // Hide interaction text
+                interactable = false; // Set interactable to false
+
+                if (toggle)
                 {
-                    Timeline.SetActive(true);
+                    // Check if Timeline still exists before trying to activate it
+                    if (Timeline != null)
+                    {
+                        Timeline.SetActive(true);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Timeline has been destroyed, cannot activate!");
+                    }
+
                     StartCoroutine(OpenDoor());
                 }
                 else
                 {
                     StartCoroutine(CloseDoor());
                 }
-                intText.SetActive(false);
-                interactable = false;
             }
         }
     }
@@ -86,7 +99,29 @@ public class DoorTimeline : MonoBehaviour
         doorAnim.SetTrigger("open");
         audioSource.PlayOneShot(openSound);
         toggle = true;
-        yield return new WaitForSeconds(1f); // Delay to prevent spam (adjust the delay as needed)
+
+        // Disable colliders during animation
+        if (doorCollider != null)
+        {
+            doorCollider.enabled = false;
+        }
+        if (doorCollider2 != null)
+        {
+            doorCollider2.enabled = false;
+        }
+
+        yield return new WaitForSeconds(doorAnim.GetCurrentAnimatorStateInfo(0).length); // Wait for the door to open
+
+        // Enable colliders after animation
+        if (doorCollider != null)
+        {
+            doorCollider.enabled = true;
+        }
+        if (doorCollider2 != null)
+        {
+            doorCollider2.enabled = true;
+        }
+
         isActionInProgress = false; // Reset the flag after door fully opens
     }
 
@@ -97,7 +132,35 @@ public class DoorTimeline : MonoBehaviour
         doorAnim.SetTrigger("close");
         audioSource.PlayOneShot(closeSound);
         toggle = false;
-        yield return new WaitForSeconds(1f); // Delay to prevent spam (adjust the delay as needed)
+
+        // Disable colliders during animation
+        if (doorCollider != null)
+        {
+            doorCollider.enabled = false;
+        }
+        if (doorCollider2 != null)
+        {
+            doorCollider2.enabled = false;
+        }
+
+        yield return new WaitForSeconds(doorAnim.GetCurrentAnimatorStateInfo(0).length); // Wait for the door to close
+
+        // Enable colliders after animation
+        if (doorCollider != null)
+        {
+            doorCollider.enabled = true;
+        }
+        if (doorCollider2 != null)
+        {
+            doorCollider2.enabled = true;
+        }
+
         isActionInProgress = false; // Reset the flag after door fully closes
+    }
+
+    public void ResetInteraction()
+    {
+        intText.SetActive(false); // Make sure interaction text is off
+        interactable = false;     // Reset interactable flag
     }
 }

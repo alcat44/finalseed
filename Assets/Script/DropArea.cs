@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Playables;
+using UnityEngine.UI; 
 
 public class DropArea : MonoBehaviour
 {
@@ -14,7 +15,10 @@ public class DropArea : MonoBehaviour
     public float textSpeed; // Kecepatan pengetikan teks
     public GameObject DialogBG; // Background dialog
     public MonoBehaviour SC_FPSController; // Kontrol player
+    public SC_FPSController playerScript;
     public Pause pauseScript;
+    public PintuLocked pintuLockedScript;
+    public DoorUtama doorScript;
     public AudioSource audioSource;
 
     public PlayableDirector timeline; // Timeline yang akan dipanggil setelah 2 trigger
@@ -34,8 +38,16 @@ public class DropArea : MonoBehaviour
     public GameObject objectToDisable1;
     public GameObject objectToDisable2;
     public GameObject bapakDisable;
-    public GameObject exhaustionText;
+    public GameObject bapakAble;
 
+    public TextMeshProUGUI countdownText; // Tambahkan referensi untuk countdown text
+    public GameOverManager gameOverManager; // Referensi untuk GameOverManager script
+
+    public Image fadeImage; // Tambahkan referensi untuk Image di Canvas yang akan digunakan untuk fade in
+    public float fadeDuration = 1f; // Durasi animasi fade in
+
+    private Coroutine countdownCoroutine; // Tambahkan ini untuk menyimpan referensi ke coroutine
+    
     private void Start()
     {
         // Pastikan objek yang akan muncul dimulai dalam keadaan tidak aktif
@@ -59,6 +71,8 @@ public class DropArea : MonoBehaviour
         textComponent.text = string.Empty;
         DialogBG.SetActive(false); // Nonaktifkan background dialog di awal
         intText.SetActive(false); // Nonaktifkan teks "Press E" di awal
+
+        playerScript = SC_FPSController as SC_FPSController;
     }
 
     void OnTriggerStay(Collider other)
@@ -113,14 +127,15 @@ public class DropArea : MonoBehaviour
                 timeline.gameObject.SetActive(true);
                 bapakDisable.SetActive(false);
                 intText.SetActive(false);
-                exhaustionText.SetActive(false);
+                player.SetActive(false);
+
+                // Reset exhaustion text during hiding, if player is not exhausted
+                if (playerScript != null && playerScript.exhaustionText != null)
+                {
+                    playerScript.exhaustionText.SetActive(false);
+                }
+
                 timeline.Play();
-
-                // Nonaktifkan semua interaksi
-                ToggleInteractions(false);
-
-                // Sembunyikan player
-                HidePlayer();
 
                 // Beralih ke kamera cutscene
                 SwitchToCutsceneCamera();
@@ -148,7 +163,18 @@ public class DropArea : MonoBehaviour
                 textComponent.text = lines[index];
             }
         }
+
+        if (enemyAI1.isChasing)
+        {
+            Object.enabled = false; // Nonaktifkan collider
+        }
+        else
+        {
+            Object.enabled = true; // Aktifkan collider
+        }
+
     }
+
 
     void StartDialog()
     {
@@ -229,60 +255,99 @@ public class DropArea : MonoBehaviour
         }
     }
 
-    // Fungsi untuk menyembunyikan player
-    private void HidePlayer()
-    {
-        // Menonaktifkan kontrol player (misalnya script movement)
-        if (player != null)
-        {
-            player.GetComponent<SC_FPSController>().enabled = false;
-            player.GetComponent<AudioSource>().enabled = false;
-
-            // Nonaktifkan mesh renderer (atau komponen visual lainnya) untuk "menyembunyikan" player
-            foreach (Renderer rend in player.GetComponentsInChildren<Renderer>())
-            {
-                rend.enabled = false;
-            }
-        }
-    }
-
-    // Fungsi untuk mengembalikan player ke kondisi semula
-    private void ShowPlayer()
-    {
-        // Mengaktifkan kembali kontrol player
-        if (player != null)
-        {
-            player.GetComponent<SC_FPSController>().enabled = true;
-            player.GetComponent<AudioSource>().enabled = true;
-
-            // Aktifkan kembali mesh renderer untuk "menampilkan" player
-            foreach (Renderer rend in player.GetComponentsInChildren<Renderer>())
-            {
-                rend.enabled = true;
-            }
-        }
-    }
-
-    // Event ketika timeline berhenti
+    // Modifikasi fungsi OnTimelineStopped
     private void OnTimelineStopped(PlayableDirector director)
     {
-        // Ketika timeline selesai, kembalikan player
-        ShowPlayer();
-
         // Kembalikan ke kamera player
         SwitchToPlayerCamera();
 
-        // Aktifkan kembali semua interaksi
-        ToggleInteractions(true);
-
+        // Nonaktifkan objek yang perlu dinonaktifkan
         if (objectToDisable1 != null)
         {
-        objectToDisable1.SetActive(false);
+            objectToDisable1.SetActive(false);
         }
 
         if (objectToDisable2 != null)
         {
             objectToDisable2.SetActive(false);
+        }
+
+        // Setelah timeline selesai, nonaktifkan Gembok dan aktifkan kembali collider pintu
+        if (pintuLockedScript != null)
+        {
+            pintuLockedScript.Gembok.SetActive(false);  // Nonaktifkan Gembok
+            pintuLockedScript.doorCollider.enabled = true;  // Aktifkan doorCollider 1
+            pintuLockedScript.doorCollider2.enabled = true;  // Aktifkan doorCollider 2
+        }
+
+        // Memastikan DoorUtama bisa berinteraksi kembali
+        if (doorScript != null)
+        {
+            doorScript.ResetInteraction();  // Panggil fungsi ResetInteraction dari DoorUtama
+        }
+
+        bapakAble.SetActive(true);
+        player.SetActive(true);
+
+        if (playerScript != null)
+        {
+            playerScript.ResetPlayerMovement();
+        }
+
+        countdownCoroutine = StartCoroutine(StartCountdown(20));
+    }
+
+     // Coroutine untuk countdown
+    private IEnumerator StartCountdown(int countdownTime)
+    {
+        int currentTime = countdownTime;
+
+        while (currentTime > 0)
+        {
+            countdownText.text = currentTime.ToString(); // Update teks countdown
+            yield return new WaitForSeconds(1f); // Tunggu 1 detik
+            currentTime--;
+        }
+
+        countdownText.text = "";
+        StartCoroutine(FadeIn());
+    }
+
+      // Fungsi untuk menghentikan countdown
+    public void StopCountdown()
+    {
+        if (countdownCoroutine != null)
+        {
+            StopCoroutine(countdownCoroutine); // Hentikan countdown jika coroutine sedang berjalan
+            countdownText.text = ""; // Bersihkan teks countdown
+        }
+    }
+
+     // Fungsi untuk memulai fade in
+    private IEnumerator FadeIn()
+    {
+        if (fadeImage != null)
+        {
+            fadeImage.gameObject.SetActive(true); // Aktifkan image fade in
+            Color fadeColor = fadeImage.color;
+            fadeColor.a = 0f;
+            fadeImage.color = fadeColor;
+
+            float timer = 0f;
+
+            while (timer < fadeDuration)
+            {
+                timer += Time.deltaTime;
+                fadeColor.a = Mathf.Lerp(0f, 1f, timer / fadeDuration); // Gradually increase alpha
+                fadeImage.color = fadeColor;
+                yield return null;
+            }
+
+            fadeColor.a = 1f;
+            fadeImage.color = fadeColor;
+
+            // Setelah fade in selesai, panggil fungsi game over
+            gameOverManager.TriggerGameOver();
         }
     }
 
@@ -306,10 +371,14 @@ public class DropArea : MonoBehaviour
         }
     }
 
-    // Fungsi untuk mengaktifkan atau menonaktifkan semua interaksi
-    private void ToggleInteractions(bool state)
+    public void ResetInteraction()
     {
-        intText.SetActive(state);
-        interactable = state;
+        intText.SetActive(false);
+        Object.enabled = true; // Pastikan collider aktif kembali
+        interactable = false;  // Reset flag interaksi
+        Debug.Log("Interaction reset after player respawn.");
+        
+        // Force enable collider after respawn, ignoring enemy chase state
+        enemyAI1.isChasing = false;
     }
 }

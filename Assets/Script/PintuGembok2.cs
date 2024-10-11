@@ -23,7 +23,8 @@ public class PintuGembok2 : MonoBehaviour
     private int index, NumberDialog;
     private bool isDialogueActive = false; 
     public bool interactable = false;
-    private bool hasKeyTouched = false; // Flag jika kunci sudah menyentuh pintu
+    public bool hasKeyTouched = false; // Flag jika kunci sudah menyentuh pintu
+
 
     // Start is called before the first frame update
     void Start()
@@ -114,7 +115,7 @@ public class PintuGembok2 : MonoBehaviour
             // Setelah dialog selesai, jika NumberDialog == 2, hancurkan objek ini
             if (NumberDialog == 2)
             {
-                Destroy(gameObject); // Hancurkan objek setelah dialog yang dimulai dari NumberDialog == 2 selesai
+                gameObject.SetActive(false); // Hancurkan objek setelah dialog yang dimulai dari NumberDialog == 2 selesai
             }
         }
     }
@@ -154,5 +155,14 @@ public class PintuGembok2 : MonoBehaviour
             intText.SetActive(false); // Matikan teks interaksi
             interactable = false; // Pemain tidak bisa berinteraksi
         }
+    }
+
+    public void ResetDialog()
+    {
+        textComponent.text = string.Empty; // Clear any active dialog text
+        intText.SetActive(false); // Hide interaction prompt
+        interactable = false; // Reset interaction flag
+        isDialogueActive = false; // Ensure dialog is not active
+        DialogBG.SetActive(false); // Hide dialog background
     }
 }

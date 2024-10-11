@@ -19,12 +19,14 @@ public class DIalogMasuk : MonoBehaviour
     private int index;
     private SC_FPSController scFpsController;
     private Pause pauseScript;
+    private PauseApart pauseScript2;
 
     void Start()
     {
         // Inisialisasi komponen pada Start
         scFpsController = player.GetComponent<SC_FPSController>();  // Ambil komponen SC_FPSController dari player
         pauseScript = pauseMenuObject.GetComponent<Pause>();  // Ambil komponen Pause dari pauseMenuObject
+        pauseScript2 = pauseMenuObject.GetComponent<PauseApart>();
 
         textComponent.text = string.Empty;
         DialogBG.SetActive(false);  // Pastikan dialog background tidak aktif di awal
@@ -64,6 +66,7 @@ public class DIalogMasuk : MonoBehaviour
 
         if (scFpsController != null) scFpsController.enabled = false;  // Nonaktifkan kontrol player
         if (pauseScript != null) pauseScript.enabled = false;  // Nonaktifkan pause menu
+        if (pauseScript2 != null) pauseScript2.enabled = false;
         if (audioSource != null) audioSource.enabled = false;  // Nonaktifkan audio source jika ada
     }
 
@@ -99,6 +102,7 @@ public class DIalogMasuk : MonoBehaviour
 
         if (scFpsController != null) scFpsController.enabled = true;  // Aktifkan kontrol player
         if (pauseScript != null) pauseScript.enabled = true;  // Aktifkan pause menu
+        if (pauseScript2 != null) pauseScript2.enabled = true; 
         if (audioSource != null) audioSource.enabled = true;  // Aktifkan audio source jika ada
     }
 }

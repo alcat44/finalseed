@@ -57,9 +57,12 @@ public class DialogDestroy : MonoBehaviour
         isDialogActive = true; // Tandai bahwa dialog aktif
         SC_FPSController.enabled = false; // Matikan script player movement
         if (pauseScript != null) pauseScript.enabled = false; 
-        audioSource.enabled = false;
+        if (audioSource != null) audioSource.enabled = false; // Cek null untuk audioSource
         intText.SetActive(false);
-        audioSource2.PlayOneShot(LockedSound);
+        if (audioSource2 != null && LockedSound != null) // Cek null untuk audioSource2 dan LockedSound
+        {
+            audioSource2.PlayOneShot(LockedSound);
+        }
         DialogBG.SetActive(true);
         StartCoroutine(TypeLine());
     }
@@ -88,7 +91,7 @@ public class DialogDestroy : MonoBehaviour
             textComponent.text = string.Empty; // Kosongkan teks setelah dialog selesai
             SC_FPSController.enabled = true; // Aktifkan kembali script player movement
             if (pauseScript != null) pauseScript.enabled = true;
-            audioSource.enabled = true;
+            if (audioSource != null) audioSource.enabled = true; // Cek null untuk audioSource
             DialogBG.SetActive(false);
             Destroy(trigger);
         }
@@ -97,14 +100,14 @@ public class DialogDestroy : MonoBehaviour
     // Ketika pemain berada di dalam area trigger
     void OnTriggerStay(Collider other)
     {
-         if (other.CompareTag("MainCamera"))
+        if (other.CompareTag("MainCamera"))
         {
             // Tampilkan "Press E" hanya jika dialog belum aktif
             if (!isDialogActive)
             {
                 intText.SetActive(true);
                 interactable = true;
-                door.enabled = false;
+                if (door != null) door.enabled = false; // Cek null untuk door
             }
         }                                                                           
     }
@@ -116,7 +119,7 @@ public class DialogDestroy : MonoBehaviour
         {
             intText.SetActive(false); // Sembunyikan "Press E"
             interactable = false; // Pemain tidak bisa berinteraksi
-            door.enabled = true;
+            if (door != null) door.enabled = true; // Cek null untuk door
         }
     }
 }

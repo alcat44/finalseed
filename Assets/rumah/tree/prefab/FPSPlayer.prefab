@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2709051939447151210}
   - component: {fileID: 7565630489952818432}
   - component: {fileID: 8763320972691260269}
-  - component: {fileID: 4960312911833677331}
   - component: {fileID: 844389024809668956}
   - component: {fileID: 4204222394916375738}
   - component: {fileID: 1768214661423945739}
@@ -101,27 +100,8 @@ MonoBehaviour:
   runCooldown: 4
   runningDuration: 3
   shiftResetTime: 2
---- !u!114 &4960312911833677331
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4009298974940005714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e2e922bafb87344881e79be2ae48ac1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectiveText: {fileID: 0}
-  pickupText: {fileID: 0}
-  bahan: {fileID: 0}
-  icon: {fileID: 0}
-  music: {fileID: 0}
-  audioSource: {fileID: 0}
-  updateSound: {fileID: 0}
-  interactable: 0
-  inspectCanvas: {fileID: 0}
+  blackScreen: {fileID: 0}
+  fadeDuration: 1
 --- !u!114 &844389024809668956
 MonoBehaviour:
   m_ObjectHideFlags: 0
