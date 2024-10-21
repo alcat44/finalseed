@@ -122,7 +122,7 @@ public class DropArea : MonoBehaviour
             }
             else if (other.CompareTag("Pickupable2"))
             {
-                NumberDialog = 4; // Set NumberDialog untuk Pickupable2
+                NumberDialog = 3; // Set NumberDialog untuk Pickupable2
             }
 
             if (!hasObjectSpawned)
@@ -209,7 +209,7 @@ public class DropArea : MonoBehaviour
 
     void NextLine()
     {
-        if (index < lines.Length - 1 && index < NumberDialog + 3) 
+        if (index < lines.Length - 1 && index < NumberDialog + 2) 
         {
             index++;
             textComponent.text = string.Empty;

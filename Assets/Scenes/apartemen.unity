@@ -4932,7 +4932,7 @@ MonoBehaviour:
   intText: {fileID: 1801080727}
   lines:
   - 
-  - ini bukan waktunya untuk tidar
+  - "This isn\u2019t the time to sleep"
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 253504532}
@@ -4986,8 +4986,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textComponent: {fileID: 1849411760}
   lines:
-  - Besok peringatan ibu meninggal,
-  - aku harus tidur
+  - Tomorrow's the anniversary of mom's passing...
+  - I should get some sleep and be ready for the day
   textSpeed: 0.02
   Dialog: {fileID: 1586897692}
   DialogBG: {fileID: 452020259}
@@ -8507,8 +8507,8 @@ MonoBehaviour:
   intText: {fileID: 1801080727}
   lines:
   - 
-  - besok tepat 3 tahun setelah ibu meninggalkanku,
-  - "sakit kepala ibu tidak mau berhenti hingga kematian\_terkhirnya..."
+  - Tomorrow marks exactly three years since mom left me
+  - Her headaches never stopped, not until her very last breath...
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 253504532}
@@ -11822,8 +11822,8 @@ MonoBehaviour:
   intText: {fileID: 1801080727}
   lines:
   - 
-  - foto ini tepat diambil setelah keluarga kami kaya mendadak,
-  - sepertinya dia memang berusaha keras...
+  - This photo was taken right after our family suddenly became wealthy
+  - It seems like he really worked hard for it...
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 253504532}
@@ -14384,9 +14384,9 @@ MonoBehaviour:
   intText: {fileID: 1801080727}
   lines:
   - 
-  - tidur dulu bor!
+  - "This isn\u2019t the time to leave, I need to get some sleep!"
   - 
-  - ambil kunci mobil dulu bor!
+  - "I can\u2019t leave yet. I need to find the car keys first!"
   textSpeed: 0.02
   blackScreen: {fileID: 2117651219}
   fadeDuration: 1
@@ -14661,7 +14661,8 @@ MonoBehaviour:
   intText: {fileID: 1801080727}
   lines:
   - 
-  - malas gua mandi...
+  - Ugh, a bath sounds like too much effort right now...
+  - Sleep sounds way better than getting in that tub
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 253504532}
@@ -14986,7 +14987,7 @@ MonoBehaviour:
   intText: {fileID: 68347324}
   lines:
   - 
-  - nahh ini dia kuncinya!
+  - Ah, there it is! Finally found the key!
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 253504532}

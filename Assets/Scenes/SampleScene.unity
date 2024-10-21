@@ -15621,8 +15621,7 @@ MonoBehaviour:
   intText: {fileID: 1087951487}
   lines:
   - 
-  - ...
-  - keluarrrr...
+  - Get out of here! Leave now!
   textSpeed: 0
   interactable: 0
   SC_FPSController: {fileID: 1413429325}
@@ -16731,11 +16730,11 @@ MonoBehaviour:
   textComponent: {fileID: 1324230834}
   lines:
   - 
-  - terkunci...
+  - "it\u2019s locked!"
   - 
-  - Kebuka cui!!!
+  - Finally, the door is open!
   - 
-  - tempelkan kunci ke pintu!!!
+  - Press the key against the door to unlock it!
   textSpeed: 0.02
   intText: {fileID: 1087951487}
   DialogBG: {fileID: 1270310948}
@@ -17111,15 +17110,13 @@ MonoBehaviour:
   activeDuration: 35
   textComponent: {fileID: 1324230834}
   lines:
-  - ...
-  - Mungkin ini cara satu satunya...
-  - Agar Ibu dan kakek tenang dialam sana
-  - sisa kakek!!!
-  - ...
-  - Mungkin ini cara satu satunya...
-  - Agar Ibu dan kakek tenang dialam sana
-  - sisa ibu!!!
-  textSpeed: 0
+  - Maybe this is the only way...
+  - To bring peace to Mom and Grandpa over there
+  - Just Grandpa's thing left!!!
+  - Maybe this is the only way...
+  - To bring peace to Mom and Grandpa over there
+  - Just mom's thing left!!!
+  textSpeed: 0.02
   DialogBG: {fileID: 1270310948}
   SC_FPSController: {fileID: 1413429325}
   playerScript: {fileID: 1413429325}
@@ -24177,9 +24174,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   intText2: {fileID: 1645169319}
-  door: {fileID: 0}
+  door: {fileID: 7672341486434392345}
   door2: {fileID: 0}
-  doorScript1: {fileID: 0}
+  doorScript1: {fileID: 7672341486434392346}
   doorScript2: {fileID: 0}
 --- !u!65 &389956356
 BoxCollider:
@@ -30235,7 +30232,8 @@ MonoBehaviour:
   intText: {fileID: 1087951487}
   lines:
   - 
-  - MAMAKKKKKK!!!!!
+  - '"What the hell is this?'
+  - A doll that looks like Mom? This is messed up!
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 1413429325}
@@ -58167,7 +58165,7 @@ MonoBehaviour:
   intText: {fileID: 1087951487}
   lines:
   - 
-  - terkunci lagi...
+  - it's locked!
   textSpeed: 0
   interactable: 0
   SC_FPSController: {fileID: 1413429325}
@@ -61346,8 +61344,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textComponent: {fileID: 1324230834}
   lines:
-  - ...
-  - buset banyak amat yak pohonnya
+  - "What\u2019s going on?"
+  - "This place doesn\u2019t look like it\u2019s ready for a memorial at all"
+  - Where is everyone? I thought today was supposed to be special...
   textSpeed: 0.02
   Dialog: {fileID: 1236309783}
   DialogBG: {fileID: 1270310948}
@@ -62058,11 +62057,11 @@ MonoBehaviour:
   textComponent: {fileID: 1324230834}
   lines:
   - 
-  - kekunci njirr
+  - "it\u2019s locked!"
   - 
-  - kebuka coiii!!!
+  - finally, the door is open!
   - 
-  - tempelkan kunci ke pintu!!!
+  - Press the key against the door to unlock it!
   textSpeed: 0.02
   intText: {fileID: 1087951487}
   DialogBG: {fileID: 1270310948}
@@ -91176,7 +91175,7 @@ MonoBehaviour:
   intText: {fileID: 1087951487}
   lines:
   - 
-  - sialll terkunci!!!
+  - "Damn, it\u2019s locked!"
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 1413429325}
@@ -91432,8 +91431,8 @@ MonoBehaviour:
   textComponent: {fileID: 1324230834}
   lines:
   - ...
-  - aduhhh, sakit sekali...
-  - dia sudah gila
+  - Ughhh, it hurts so much...
+  - He's gone crazy!
   textSpeed: 0.02
   Dialog: {fileID: 1795624459}
   DialogBG: {fileID: 1270310948}
@@ -105172,7 +105171,8 @@ MonoBehaviour:
   intText: {fileID: 1087951487}
   lines:
   - 
-  - KAKEKKKK!!!!!!
+  - No way! A doll of granpa?
+  - What kind of sick joke is this?
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 1413429325}
@@ -124440,7 +124440,8 @@ MonoBehaviour:
   intText: {fileID: 1087951487}
   lines:
   - 
-  - kakek suka duduk sini saat senja
+  - Grandpa loved to sit here during sunset
+  - It feels so empty without him...
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 1413429325}
@@ -135185,7 +135186,7 @@ MonoBehaviour:
   intText: {fileID: 1645169319}
   lines:
   - 
-  - lupa bawa uang!
+  - I forgot to bring any money!
   textSpeed: 0
   interactable: 0
   SC_FPSController: {fileID: 1413429325}
@@ -136023,7 +136024,7 @@ MonoBehaviour:
   intText: {fileID: 1087951487}
   lines:
   - 
-  - kebiasaan minumnya tambah buruk...
+  - His drinking habit has gotten worse...
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 1413429325}
@@ -136814,8 +136815,8 @@ MonoBehaviour:
   intText: {fileID: 1087951487}
   lines:
   - 
-  - bersemayam sutarni bin Hj. juned,
-  - 23 maret 1967 - 10 Desember 2021
+  - Here rests Sutarni binti Hj. Juned,
+  - March 23, 1967 - December 10, 2021
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 1413429325}
@@ -137021,8 +137022,8 @@ MonoBehaviour:
   intText: {fileID: 1087951487}
   lines:
   - 
-  - bersemayam Hj. juned bin Mulyono,
-  - 3 februari 1945 - 18 november 2018
+  - Here rests Hj. Juned bin Mulyono,
+  - February 3, 1945 - November 18, 2018
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 1413429325}
@@ -141353,9 +141354,8 @@ MonoBehaviour:
   intText: {fileID: 1087951487}
   lines:
   - 
-  - mengapa ada pohon besar ditengah rumah???!??!
-  - apa ini alasannya mengapa ayah
-  - tiba tiba menjadi kaya raya??
+  - I have no idea about this tree,
+  - or how it ended up in the middle of this house
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 1413429325}
@@ -141970,7 +141970,7 @@ MonoBehaviour:
   intText: {fileID: 1087951487}
   lines:
   - 
-  - grossss
+  - Ugh, the smell is awful...
   textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 1413429325}
@@ -142021,8 +142021,9 @@ MonoBehaviour:
   intText: {fileID: 1087951487}
   lines:
   - 
-  - gede bet bjirrr
-  textSpeed: 0
+  - "Bjir, that\u2019s a huge photo!"
+  - It really stands out in here
+  textSpeed: 0.02
   interactable: 0
   SC_FPSController: {fileID: 1413429325}
   pauseScript: {fileID: 2141907798}

@@ -1048,7 +1048,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb47e133a7b4a704b8940044cdf94d6b, type: 3}
   m_Name: SubtitleClip(Clone)(Clone)(Clone)(Clone)
   m_EditorClassIdentifier: 
-  subtitleText: apa kalian akan meningalkanku sendirian lagi?
+  subtitleText: Are you really going to leave me all alone again?
 --- !u!114 &-8179255202985856974
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1105,7 +1105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb47e133a7b4a704b8940044cdf94d6b, type: 3}
   m_Name: SubtitleClip(Clone)
   m_EditorClassIdentifier: 
-  subtitleText: Mamak
+  subtitleText: mom
 --- !u!114 &-7843193613771713405
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1517,7 +1517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb47e133a7b4a704b8940044cdf94d6b, type: 3}
   m_Name: SubtitleClip(Clone)(Clone)(Clone)(Clone)(Clone)
   m_EditorClassIdentifier: 
-  subtitleText: MAMA
+  subtitleText: mom and granpa
 --- !u!114 &-6808272851808981982
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4000,7 +4000,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb47e133a7b4a704b8940044cdf94d6b, type: 3}
   m_Name: SubtitleClip(Clone)(Clone)
   m_EditorClassIdentifier: 
-  subtitleText: DAN JANGAN PERNAH BERTEMU LAGI DENGAN AYAHMU
+  subtitleText: and never see your father again
 --- !u!114 &-1689886853124225604
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4013,7 +4013,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb47e133a7b4a704b8940044cdf94d6b, type: 3}
   m_Name: SubtitleClip(Clone)(Clone)(Clone)
   m_EditorClassIdentifier: 
-  subtitleText: SELAMAT TINGGAL ANAKKU
+  subtitleText: Goodbye, andi!!!
 --- !u!114 &-1008685178115386312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4072,7 +4072,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb47e133a7b4a704b8940044cdf94d6b, type: 3}
   m_Name: SubtitleClip
   m_EditorClassIdentifier: 
-  subtitleText: TERIMAKASIH ANAKKU SUDAH MENYELAMATKAN MAMA DAN KAKEK
+  subtitleText: Thank you, andi, for saving Mom and Grandpa
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4748,7 +4748,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb47e133a7b4a704b8940044cdf94d6b, type: 3}
   m_Name: SubtitleClip
   m_EditorClassIdentifier: 
-  subtitleText: Mamak
+  subtitleText: mom
 --- !u!114 &999644925694309756
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4774,7 +4774,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb47e133a7b4a704b8940044cdf94d6b, type: 3}
   m_Name: SubtitleClip(Clone)
   m_EditorClassIdentifier: 
-  subtitleText: SEGERALAH PERGI DARI SINI
+  subtitleText: You need to leave here quickly
 --- !u!114 &1453801239463980973
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5304,7 +5304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb47e133a7b4a704b8940044cdf94d6b, type: 3}
   m_Name: SubtitleClip(Clone)(Clone)
   m_EditorClassIdentifier: 
-  subtitleText: Mamak
+  subtitleText: mom
 --- !u!114 &2643750761182112386
 MonoBehaviour:
   m_ObjectHideFlags: 1
