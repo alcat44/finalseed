@@ -12,6 +12,7 @@ public class Door : MonoBehaviour
     public AudioClip closeSound;
     public Collider doorCollider; // Collider pintu
     public Collider doorCollider2; // Collider pintu kedua
+    public Collider keyCollider; // Collider for the key
 
     private bool isEnemyNearby = false; // To check if the enemy is already near the door
 
@@ -84,7 +85,7 @@ public class Door : MonoBehaviour
         doorAnim.SetTrigger("open");
         audioSource.PlayOneShot(openSound);
 
-        // Dinonaktifkan selama animasi
+        // Disable the door colliders during the animation
         if (doorCollider != null)
         {
             doorCollider.enabled = false;
@@ -94,10 +95,16 @@ public class Door : MonoBehaviour
             doorCollider2.enabled = false;
         }
 
-        // Tunggu hingga animasi selesai
+        // Activate the key collider when the door opens
+        if (keyCollider != null)
+        {
+            keyCollider.enabled = true;
+        }
+
+        // Wait until the animation is finished
         yield return new WaitForSeconds(doorAnim.GetCurrentAnimatorStateInfo(0).length);
 
-        // Diaktifkan kembali setelah animasi selesai
+        // Enable the door colliders after the animation
         if (doorCollider != null)
         {
             doorCollider.enabled = true;
@@ -116,7 +123,7 @@ public class Door : MonoBehaviour
         doorAnim.SetTrigger("close");
         audioSource.PlayOneShot(closeSound);
 
-        // Dinonaktifkan selama animasi
+        // Disable the door colliders during the animation
         if (doorCollider != null)
         {
             doorCollider.enabled = false;
@@ -126,10 +133,16 @@ public class Door : MonoBehaviour
             doorCollider2.enabled = false;
         }
 
-        // Tunggu hingga animasi selesai
+        // Deactivate the key collider when the door closes
+        if (keyCollider != null)
+        {
+            keyCollider.enabled = false;
+        }
+
+        // Wait until the animation is finished
         yield return new WaitForSeconds(doorAnim.GetCurrentAnimatorStateInfo(0).length);
 
-        // Diaktifkan kembali setelah animasi selesai
+        // Enable the door colliders after the animation
         if (doorCollider != null)
         {
             doorCollider.enabled = true;

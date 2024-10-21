@@ -15,6 +15,9 @@ public class GameOverManager : MonoBehaviour
     public int maxRespawns = 3;
     public bool isGameOver = false;
 
+    public AudioClip gameOverClip;
+    public AudioSource GameOver;
+
     void Start()
     {
         // Call UpdateLivesText immediately when the game starts
@@ -48,6 +51,12 @@ public class GameOverManager : MonoBehaviour
         Time.timeScale = 0;  // Pause game
         playerScript.enabled = false;
         audioSource.enabled = false;
+
+        if (gameOverClip != null)
+        {
+            GameOver.clip = gameOverClip;
+            GameOver.Play();  // Mainkan audio game over
+        }
 
         if (pauseScript != null)
         {

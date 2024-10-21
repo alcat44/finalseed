@@ -14,6 +14,7 @@ public class Dialogrespawn : MonoBehaviour
     public GameObject DialogBG;
     public GameObject player;
     public GameObject pauseMenuObject;
+    public Collider bedCollider; // Collider pintu
     public AudioSource audioSource;
     public PlayableDirector timeline;
 
@@ -32,6 +33,13 @@ public class Dialogrespawn : MonoBehaviour
     private int index;
     private SC_FPSController scFpsController;
     private Pause pauseScript;
+
+    // Gibberish Sound Properties
+    public AudioClip[] SpeakNoises = new AudioClip[0]; // Array suara gibberish
+    public AudioSource gibberishSource; // AudioSource untuk gibberish
+    public float gibberishPitch = 1.0f; // Kecepatan playback untuk audio gibberish (1.0 = normal speed)
+    private Coroutine gibberishCoroutine; // Coroutine untuk gibberish
+    private bool isGibberishPlaying = false; // Flag untuk mengecek apakah gibberish sedang diputar
 
     void Start()
     {
@@ -67,6 +75,7 @@ public class Dialogrespawn : MonoBehaviour
             {
                 StopAllCoroutines();
                 textComponent.text = lines[index];
+                StopGibberish(); // Stop audio gibberish jika tombol E ditekan untuk skip
             }
         }
 
@@ -79,6 +88,7 @@ public class Dialogrespawn : MonoBehaviour
 
     void PlayTimeline()
     {
+        if (pauseScript != null) pauseScript.enabled = true;
         DialogBG.SetActive(false);
 
         if (enemyAI1 != null)
@@ -91,7 +101,6 @@ public class Dialogrespawn : MonoBehaviour
         {
             enemyNavMeshAgent.isStopped = true; // Hentikan NavMeshAgent
         }
-
 
         if (timelineCamera != null && playerCamera != null)
         {
@@ -130,6 +139,7 @@ public class Dialogrespawn : MonoBehaviour
     {
         if ((other.CompareTag("Player") || other.CompareTag("MainCamera")) && !isDialogueActive)
         {
+
             if (!hasPlayedTimeline)
             {
                 PlayTimeline();
@@ -172,6 +182,11 @@ public class Dialogrespawn : MonoBehaviour
         timelinePlaying = false;
         canSkip = false;  // Reset the ability to skip
         Dialog.SetActive(false);
+
+        if (bedCollider != null)
+        {
+            bedCollider.enabled = true;
+        }
     }
 
     void StartDialogue()
@@ -184,6 +199,17 @@ public class Dialogrespawn : MonoBehaviour
         if (scFpsController != null) scFpsController.enabled = false;
         if (pauseScript != null) pauseScript.enabled = false;
         if (audioSource != null) audioSource.enabled = false;
+
+         // Hentikan gerakan musuh
+        if (enemyNavMeshAgent != null)
+        {
+            enemyNavMeshAgent.isStopped = true; // Hentikan NavMeshAgent
+        }
+
+        if (enemyAI1 != null)
+        {
+            enemyAI1.enabled = false;
+        }
     }
 
     IEnumerator TypeLine()
@@ -191,6 +217,10 @@ public class Dialogrespawn : MonoBehaviour
         foreach (char c in lines[index].ToCharArray())
         {
             textComponent.text += c;
+
+            // Play gibberish sound when typing each character
+            PlayRandomGibberish();
+
             yield return new WaitForSeconds(textSpeed);
         }
     }
@@ -219,5 +249,52 @@ public class Dialogrespawn : MonoBehaviour
         if (scFpsController != null) scFpsController.enabled = true;
         if (pauseScript != null) pauseScript.enabled = true;
         if (audioSource != null) audioSource.enabled = true;
+        if (bedCollider != null)
+        {
+            bedCollider.enabled = true;
+        }
+
+        // Lanjutkan gerakan musuh
+        if (enemyNavMeshAgent != null)
+        {
+            enemyNavMeshAgent.isStopped = false; // Lanjutkan NavMeshAgent
+        }
+
+        if (enemyAI1 != null)
+        {
+            enemyAI1.enabled = true;
+        }
+    }
+
+    // Functions for Gibberish Sound
+
+    // Play a random gibberish sound
+    void PlayRandomGibberish()
+    {
+        if (SpeakNoises.Length > 0 && !isGibberishPlaying) // Cek jika suara tidak sedang diputar
+        {
+            // Pilih suara secara acak
+            AudioClip randomClip = SpeakNoises[Random.Range(0, SpeakNoises.Length)];
+            gibberishSource.pitch = gibberishPitch; // Set kecepatan playback
+            gibberishSource.PlayOneShot(randomClip); // Mainkan suara
+            isGibberishPlaying = true; // Tandai bahwa suara sedang diputar
+
+            // Hentikan mark ketika clip selesai
+            StartCoroutine(ResetGibberishPlaying(randomClip.length));
+        }
+    }
+
+    // Coroutine untuk mereset flag isGibberishPlaying setelah clip selesai
+    private IEnumerator ResetGibberishPlaying(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        isGibberishPlaying = false; // Set flag menjadi false setelah audio selesai
+    }
+
+    // Fungsi untuk menghentikan audio gibberish
+    void StopGibberish()
+    {
+        gibberishSource.Stop(); // Hentikan audio
+        isGibberishPlaying = false; // Reset flag
     }
 }

@@ -220,11 +220,27 @@ public class SC_FPSController : MonoBehaviour
         animator.SetBool("IsCrouching", true);  // Set animator crouching state
     }
 
+    void OnEnable()
+    {
+        if (isCrouching)
+        {
+            StopCrouching(); // Reset crouch state and make the player stand up
+        }
+    }
+
     void StopCrouching()
     {
         isCrouching = false;
-        animator.SetBool("IsCrouching", false); // Reset crouching state
+        animator.SetBool("IsCrouching", false); // Reset crouching state in the animator
+
+        // Reset camera position to the original standing position
+        playerCamera.transform.localPosition = Vector3.Lerp(
+            playerCamera.transform.localPosition,
+            originalCameraPosition,
+            Time.deltaTime * cameraTransitionSpeed
+        );
     }
+
 
    void UpdateCameraPosition(bool isRunning, bool isCrouching)
     {
@@ -338,4 +354,5 @@ public class SC_FPSController : MonoBehaviour
         yield return new WaitForSeconds(runCooldown); // Wait for cooldown duration
         isExhausted = false; // Re-enable running after cooldown
     }
+
 }

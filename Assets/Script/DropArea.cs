@@ -39,6 +39,7 @@ public class DropArea : MonoBehaviour
     public GameObject objectToDisable2;
     public GameObject bapakDisable;
     public GameObject bapakAble;
+    public GameObject explosion;
 
     public TextMeshProUGUI countdownText; // Tambahkan referensi untuk countdown text
     public GameOverManager gameOverManager; // Referensi untuk GameOverManager script
@@ -47,6 +48,17 @@ public class DropArea : MonoBehaviour
     public float fadeDuration = 1f; // Durasi animasi fade in
 
     private Coroutine countdownCoroutine; // Tambahkan ini untuk menyimpan referensi ke coroutine
+
+    public AudioClip destroySound;
+    public AudioClip countdownClip; // Tambahkan AudioClip untuk countdown
+    public AudioSource audioSourceKarpet;
+    public AudioSource audioCountdown;
+
+    public AudioClip[] SpeakNoises = new AudioClip[0]; // Array suara gibberish
+    public AudioSource gibberishSource; // AudioSource untuk gibberish
+    public float gibberishPitch = 1.0f; // Kecepatan playback untuk audio gibberish (1.0 = normal speed)
+    private bool isGibberishPlaying = false; // Flag untuk mengecek apakah gibberish sedang diputar
+
     
     private void Start()
     {
@@ -118,6 +130,12 @@ public class DropArea : MonoBehaviour
                 hasObjectSpawned = true; // Set flag agar objek tidak muncul lagi
                 StartCoroutine(ActivateAndDeactivateObject());
             }
+
+            if (destroySound != null && audioSourceKarpet != null)
+            {
+                audioSourceKarpet.PlayOneShot(destroySound);
+            }
+
 
             Destroy(other.gameObject); // Hapus objek yang dibuang
 
@@ -191,28 +209,64 @@ public class DropArea : MonoBehaviour
 
     void NextLine()
     {
-        // Pastikan index tidak melebihi jumlah baris dalam array lines
         if (index < lines.Length - 1 && index < NumberDialog + 3) 
         {
-            index++; // Tambah index
+            index++;
             textComponent.text = string.Empty;
-            StartCoroutine(TypeLine()); // Tampilkan dialog berikutnya
+            StartCoroutine(TypeLine());
         }
         else
         {
-            EndDialog(); // Akhiri dialog jika sudah tidak ada lagi line atau index melebihi batas
+            StopGibberish(); // Stop audio gibberish ketika dialog selesai
+            EndDialog();
         }
     }
+
     
     IEnumerator TypeLine()
     {
-        textComponent.text = string.Empty;
+        textComponent.text = ""; // Kosongkan teks sebelumnya
+
         foreach (char c in lines[index].ToCharArray())
         {
             textComponent.text += c;
-            yield return new WaitForSeconds(textSpeed);
+
+            // Memutar suara gibberish secara acak dari array SpeakNoises
+            PlayRandomGibberish();
+
+            yield return new WaitForSeconds(textSpeed); // Tunggu sebelum karakter berikutnya muncul
+        }
+
+        // Setelah selesai, tandai line sebagai selesai
+    }
+
+    void PlayRandomGibberish()
+    {
+        if (SpeakNoises.Length > 0 && !isGibberishPlaying) // Cek jika suara tidak sedang diputar
+        {
+            // Pilih suara secara acak
+            AudioClip randomClip = SpeakNoises[Random.Range(0, SpeakNoises.Length)];
+            gibberishSource.pitch = gibberishPitch; // Set kecepatan playback
+            gibberishSource.PlayOneShot(randomClip); // Mainkan suara
+            isGibberishPlaying = true; // Tandai bahwa suara sedang diputar
+
+            // Hentikan mark ketika clip selesai
+            StartCoroutine(ResetGibberishPlaying(randomClip.length));
         }
     }
+
+    private IEnumerator ResetGibberishPlaying(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        isGibberishPlaying = false; // Set flag menjadi false setelah audio selesai
+    }
+
+    void StopGibberish()
+    {
+        gibberishSource.Stop(); // Hentikan audio
+        isGibberishPlaying = false; // Reset flag
+    }
+
 
 
     void EndDialog()
@@ -305,6 +359,7 @@ public class DropArea : MonoBehaviour
         while (currentTime > 0)
         {
             countdownText.text = currentTime.ToString(); // Update teks countdown
+            audioCountdown.PlayOneShot(countdownClip);
             yield return new WaitForSeconds(1f); // Tunggu 1 detik
             currentTime--;
         }
@@ -326,6 +381,8 @@ public class DropArea : MonoBehaviour
      // Fungsi untuk memulai fade in
     private IEnumerator FadeIn()
     {
+        explosion.SetActive(true);
+
         if (fadeImage != null)
         {
             fadeImage.gameObject.SetActive(true); // Aktifkan image fade in
@@ -380,5 +437,16 @@ public class DropArea : MonoBehaviour
         
         // Force enable collider after respawn, ignoring enemy chase state
         enemyAI1.isChasing = false;
+    }
+
+    public void ResetDialog()
+    {
+        // Reset dialog UI and interaction states
+        textComponent.text = string.Empty; // Clear any active dialog text
+        intText.SetActive(false); // Hide interaction prompt
+        interactable = false; // Reset interaction flag
+        isDialogueActive = false; // Ensure dialog is not active
+        DialogBG.SetActive(false); // Hide dialog background
+        StopGibberish(); // Stop any gibberish audio
     }
 }

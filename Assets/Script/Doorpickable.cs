@@ -14,14 +14,18 @@ public class Doorpickable : MonoBehaviour
     public Collider trigger;      // Trigger collider
     public Collider doorCollider; // Collider pintu pertama
     public Collider doorCollider2; // Collider pintu kedua
+    public MonoBehaviour ObjectDidalem;
 
     // Reference to the PickUpController script on the item
     private PickUpController pickUpController;
 
     void Start()
     {
-        // Find the PickUpController component (assuming the object this script controls has it)
-        pickUpController = Object.GetComponent<PickUpController>();
+         if (Object != null)
+        {
+            // Find the PickUpController component (assuming the object this script controls has it)
+            pickUpController = Object.GetComponent<PickUpController>();
+        }
     }
 
     void OnTriggerStay(Collider other)
@@ -82,6 +86,8 @@ public class Doorpickable : MonoBehaviour
             if (trigger != null) trigger.enabled = true;
         }
 
+        if (ObjectDidalem != null) ObjectDidalem.enabled = true;
+
         // Aktifkan kembali collider setelah animasi selesai
         if (doorCollider != null) doorCollider.enabled = true;
         if (doorCollider2 != null) doorCollider2.enabled = true;
@@ -108,6 +114,8 @@ public class Doorpickable : MonoBehaviour
             if (Object != null) Object.enabled = false;
             if (trigger != null) trigger.enabled = false;
         }
+
+        if (ObjectDidalem != null) ObjectDidalem.enabled = false;
 
         // Aktifkan kembali collider setelah animasi selesai
         if (doorCollider != null) doorCollider.enabled = true;

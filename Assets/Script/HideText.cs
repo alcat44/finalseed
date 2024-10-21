@@ -1,33 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Reflection; // Perlu untuk menggunakan Reflection
 
 public class HideText : MonoBehaviour
 {
-    public GameObject intText2; // Ubah dari intText menjadi intText2
-    public bool interactable;
-    public MonoBehaviour door;  // Script apa saja
-    public MonoBehaviour door2; // Script apa saja
+    public GameObject intText2;  // Teks interaksi
+    public Collider door;        // Collider pintu pertama
+    public Collider door2;       // Collider pintu kedua
+    public MonoBehaviour doorScript1; // MonoBehaviour script for door 1
+    public MonoBehaviour doorScript2; // MonoBehaviour script for door 2
 
-    private bool wasInteractableBefore = false; // Untuk menyimpan status sebelum collider
+    void Awake()
+    {
+        // Nonaktifkan intText2 di awal untuk memastikan tidak muncul secara acak
+        if (intText2 != null)
+        {
+            intText2.SetActive(false);
+        }
+    }
 
     void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("MainCamera"))
         {
-            // Simpan status "interactable" sebelum disembunyikan
-            wasInteractableBefore = interactable;
 
-            // Nonaktifkan teks interaksi dan skrip pintu (script apapun yang digunakan oleh door dan door2)
-            intText2.SetActive(false);  // Ubah dari intText menjadi intText2
-            door.enabled = false;
-            door2.enabled = false;
-            interactable = false;
+            if (door != null)
+            {
+                door.enabled = false;  // Nonaktifkan collider pintu pertama
+                if (doorScript1 != null)
+                {
+                    doorScript1.enabled = false; // Disable the MonoBehaviour script for door 1
+                    // Call ResetInteraction if the door script has that function
+                    Door doorScript = doorScript1 as Door;
+                    if (doorScript != null)
+                    {
+                        doorScript.ResetInteraction();
+                    }
+                }
+            }
 
-            // Ubah interaksi jika script door memiliki variabel interactable
-            SetInteractable(door, false);
-            SetInteractable(door2, false);
+            if (door2 != null)
+            {
+                door2.enabled = false; // Nonaktifkan collider pintu kedua
+                if (doorScript2 != null)
+                {
+                    doorScript2.enabled = false; // Disable the MonoBehaviour script for door 2
+                    // Call ResetInteraction if the door script has that function
+                    Door doorScript = doorScript2 as Door;
+                    if (doorScript != null)
+                    {
+                        doorScript.ResetInteraction();
+                    }
+                }
+            }
         }
     }
 
@@ -35,33 +60,24 @@ public class HideText : MonoBehaviour
     {
         if (other.CompareTag("MainCamera"))
         {
-            // Kembalikan status pintu dan interaksi
-            door.enabled = true;
-            door2.enabled = true;
-            interactable = wasInteractableBefore;
-
-            // Kembalikan interaksi jika script door memiliki variabel interactable
-            SetInteractable(door, wasInteractableBefore);
-            SetInteractable(door2, wasInteractableBefore);
-
-            // Kembalikan teks interaksi hanya jika sebelumnya bisa diinteraksi
-            if (wasInteractableBefore)
+            // Aktifkan kembali collider pintu dan MonoBehaviour script ketika player keluar dari area
+            if (door != null)
             {
-                intText2.SetActive(true);  // Ubah dari intText menjadi intText2
+                door.enabled = true; // Aktifkan kembali collider pintu pertama
+                if (doorScript1 != null)
+                {
+                    doorScript1.enabled = true; // Enable the MonoBehaviour script for door 1
+                }
             }
-        }
-    }
 
-    // Method untuk mengatur interactable menggunakan Reflection
-    void SetInteractable(MonoBehaviour script, bool value)
-    {
-        // Gunakan reflection untuk memeriksa apakah script memiliki field atau properti "interactable"
-        FieldInfo interactableField = script.GetType().GetField("interactable");
-
-        if (interactableField != null && interactableField.FieldType == typeof(bool))
-        {
-            // Jika ditemukan, atur nilai interactable sesuai parameter
-            interactableField.SetValue(script, value);
+            if (door2 != null)
+            {
+                door2.enabled = true; // Aktifkan kembali collider pintu kedua
+                if (doorScript2 != null)
+                {
+                    doorScript2.enabled = true; // Enable the MonoBehaviour script for door 2
+                }
+            }
         }
     }
 }

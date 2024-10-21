@@ -22,6 +22,13 @@ public class DialogDestroy : MonoBehaviour
     public GameObject DialogBG;
     public GameObject trigger;
 
+    // Gibberish Sound Properties
+    public AudioClip[] SpeakNoises = new AudioClip[0]; // Array suara gibberish
+    public AudioSource gibberishSource; // AudioSource untuk gibberish
+    public float gibberishPitch = 1.0f; // Kecepatan playback untuk audio gibberish (1.0 = normal speed)
+    private Coroutine gibberishCoroutine; // Coroutine untuk gibberish
+    private bool isGibberishPlaying = false; // Flag untuk mengecek apakah gibberish sedang diputar
+
     void Start()
     {
         textComponent.text = string.Empty;
@@ -47,6 +54,7 @@ public class DialogDestroy : MonoBehaviour
             {
                 StopAllCoroutines();
                 textComponent.text = lines[index];
+                StopGibberish(); // Stop gibberish saat dialog di-skip
             }
         }
     }
@@ -73,6 +81,10 @@ public class DialogDestroy : MonoBehaviour
         foreach (char c in lines[index].ToCharArray())
         {
             textComponent.text += c;
+
+            // Play gibberish sound when typing each character
+            PlayRandomGibberish();
+
             yield return new WaitForSeconds(textSpeed);
         }
     }
@@ -87,14 +99,51 @@ public class DialogDestroy : MonoBehaviour
         }
         else
         {
-            isDialogActive = false; // Tandai bahwa dialog sudah selesai
-            textComponent.text = string.Empty; // Kosongkan teks setelah dialog selesai
-            SC_FPSController.enabled = true; // Aktifkan kembali script player movement
-            if (pauseScript != null) pauseScript.enabled = true;
-            if (audioSource != null) audioSource.enabled = true; // Cek null untuk audioSource
-            DialogBG.SetActive(false);
-            Destroy(trigger);
+            EndDialogue();
         }
+    }
+
+    void EndDialogue()
+    {
+        isDialogActive = false; // Tandai bahwa dialog sudah selesai
+        textComponent.text = string.Empty; // Kosongkan teks setelah dialog selesai
+        SC_FPSController.enabled = true; // Aktifkan kembali script player movement
+        if (pauseScript != null) pauseScript.enabled = true;
+        if (audioSource != null) audioSource.enabled = true; // Cek null untuk audioSource
+        DialogBG.SetActive(false);
+        Destroy(trigger);
+    }
+
+    // Functions for Gibberish Sound
+
+    // Play a random gibberish sound
+    void PlayRandomGibberish()
+    {
+        if (SpeakNoises.Length > 0 && !isGibberishPlaying) // Cek jika suara tidak sedang diputar
+        {
+            // Pilih suara secara acak
+            AudioClip randomClip = SpeakNoises[Random.Range(0, SpeakNoises.Length)];
+            gibberishSource.pitch = gibberishPitch; // Set kecepatan playback
+            gibberishSource.PlayOneShot(randomClip); // Mainkan suara
+            isGibberishPlaying = true; // Tandai bahwa suara sedang diputar
+
+            // Hentikan flag ketika clip selesai
+            StartCoroutine(ResetGibberishPlaying(randomClip.length));
+        }
+    }
+
+    // Coroutine untuk mereset flag isGibberishPlaying setelah clip selesai
+    private IEnumerator ResetGibberishPlaying(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        isGibberishPlaying = false; // Set flag menjadi false setelah audio selesai
+    }
+
+    // Fungsi untuk menghentikan audio gibberish
+    void StopGibberish()
+    {
+        gibberishSource.Stop(); // Hentikan audio
+        isGibberishPlaying = false; // Reset flag
     }
 
     // Ketika pemain berada di dalam area trigger
@@ -121,5 +170,16 @@ public class DialogDestroy : MonoBehaviour
             interactable = false; // Pemain tidak bisa berinteraksi
             if (door != null) door.enabled = true; // Cek null untuk door
         }
+    }
+
+    public void ResetDialog()
+    {
+        // Reset dialog UI and interaction states
+        textComponent.text = string.Empty; // Clear any active dialog text
+        intText.SetActive(false); // Hide interaction prompt
+        interactable = false; // Reset interaction flag
+        isDialogActive = false; // Ensure dialog is not active
+        DialogBG.SetActive(false); // Hide dialog background
+        StopGibberish(); // Stop any gibberish audio
     }
 }

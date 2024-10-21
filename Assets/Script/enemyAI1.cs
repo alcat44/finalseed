@@ -25,6 +25,7 @@ public class enemyAI1 : MonoBehaviour
     public GameObject intText;
     public GameObject hide;
     public GameObject stopHide;
+    public Collider bedCollider; // Collider pintu
     public float aiDistance;
     public bool isDead;
     public static bool isChasing;
@@ -236,6 +237,12 @@ public class enemyAI1 : MonoBehaviour
         aiAnim.SetTrigger("jumpscare");
         Audio.sfx3();
 
+        // Dinonaktifkan selama animasi
+        if (bedCollider != null)
+        {
+            bedCollider.enabled = false;
+        }
+
         yield return new WaitForSeconds(jumpscareTime);
 
         // Mulai fade-out (menuju hitam penuh)
@@ -267,6 +274,7 @@ public class enemyAI1 : MonoBehaviour
         if (dropArea != null)
         {
             dropArea.ResetInteraction(); // Memanggil fungsi ResetInteraction di script DropArea
+            dropArea.ResetDialog();
         }
 
         Doorpickable[] doorPickables = FindObjectsOfType<Doorpickable>(); // Temukan semua Doorpickable
@@ -285,6 +293,12 @@ public class enemyAI1 : MonoBehaviour
         foreach (DialogNormal dialogNormal in allDialogsNormal)
         {
             dialogNormal.ResetDialog();
+        }
+
+        DialogDestroy[] allDialogsDestroy = FindObjectsOfType<DialogDestroy>();
+        foreach (DialogDestroy dialogDestroy in allDialogsDestroy)
+        {
+            dialogDestroy.ResetDialog();
         }
 
         PintuGembok[] allPintuGembok = FindObjectsOfType<PintuGembok>();

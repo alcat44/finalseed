@@ -11,7 +11,12 @@ public class hidingPlace : MonoBehaviour
     public GameObject kakek; // GameObject for "kakek"
     bool interactable, hiding;
     public float loseDistance;
-    
+
+    // Tambahan untuk SFX
+    public AudioSource audioSource; // AudioSource untuk memutar SFX
+    public AudioClip hideSFX; // SFX saat player hide
+    public AudioClip unhideSFX; // SFX saat player unhide
+
     // Tambahan untuk delay
     private bool canExitHiding = false; // Menentukan apakah player sudah bisa keluar dari hiding
     
@@ -29,7 +34,7 @@ public class hidingPlace : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("MainCamera"))
+        if (other.CompareTag("MainCamera") && !hiding) // Hanya tampilkan jika tidak sedang hiding
         {
             hideText.SetActive(true);
             interactable = true;
@@ -47,11 +52,11 @@ public class hidingPlace : MonoBehaviour
 
     void Update()
     {
-        if (interactable)
+        if (interactable && !hiding) // Hanya bisa hide jika tidak sedang hiding
         {
             if (Input.GetKeyDown(KeyCode.H))
             {
-                hideText.SetActive(false);
+                hideText.SetActive(false); // Pastikan hideText dimatikan
                 hidingPlayer.SetActive(true);
                 float distance = Vector3.Distance(monsterTransform.position, normalPlayer.transform.position);
                 if (distance > loseDistance)
@@ -65,6 +70,12 @@ public class hidingPlace : MonoBehaviour
                 hiding = true;
                 normalPlayer.SetActive(false);
                 interactable = false;
+
+                // Mainkan SFX hide
+                if (audioSource != null && hideSFX != null)
+                {
+                    audioSource.PlayOneShot(hideSFX);
+                }
 
                 // Reset exhaustion text during hiding, if player is not exhausted
                 if (playerScript != null && playerScript.exhaustionText != null)
@@ -92,6 +103,12 @@ public class hidingPlace : MonoBehaviour
                 hidingPlayer.SetActive(false);
                 hiding = false;
                 canExitHiding = false; // Reset agar tidak bisa keluar sebelum delay saat hiding berikutnya
+
+                // Mainkan SFX unhide
+                if (audioSource != null && unhideSFX != null)
+                {
+                    audioSource.PlayOneShot(unhideSFX);
+                }
 
                 // Handle exhaustion state after exiting hiding
                 if (playerScript != null)

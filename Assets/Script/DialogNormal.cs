@@ -8,16 +8,25 @@ public class DialogNormal : MonoBehaviour
     public TextMeshProUGUI textComponent; // Text untuk dialog
     public GameObject intText; // GameObject untuk "Press E"
     public string[] lines; // Array untuk menampung dialog
-    public float textSpeed;
+    public float textSpeed; // Kecepatan teks
     private int index;
     public bool interactable = false; // Untuk mengecek apakah pemain ada di dalam area trigger
     private bool isDialogActive = false; // Untuk mengecek apakah dialog sedang aktif
 
     public MonoBehaviour SC_FPSController;
     public Pause pauseScript;
-    public PauseApart pauseScript2;  // Tambahkan public PauseApart pauseScript2
+    public PauseApart pauseScript2;
     public AudioSource audioSource;
     public GameObject DialogBG;
+
+    public AudioClip[] SpeakNoises = new AudioClip[0]; // Array suara gibberish
+    public AudioSource gibberishSource; // AudioSource untuk gibberish
+
+    public float gibberishPitch = 1.0f; // Kecepatan playback untuk audio gibberish (1.0 = normal speed)
+
+    private Coroutine gibberishCoroutine; // Coroutine untuk gibberish
+    private bool lineFinished = false; // Flag untuk mengecek apakah line sudah selesai
+    private bool isGibberishPlaying = false; // Flag untuk mengecek apakah gibberish sedang diputar
 
     void Start()
     {
@@ -36,14 +45,16 @@ public class DialogNormal : MonoBehaviour
         // Saat dialog aktif, pemain dapat menekan E untuk melanjutkan ke baris berikutnya
         if (isDialogActive && Input.GetKeyDown(KeyCode.E))
         {
-            if (textComponent.text == lines[index])
+            if (lineFinished)
             {
                 NextLine();
             }
             else
             {
                 StopAllCoroutines();
-                textComponent.text = lines[index];
+                textComponent.text = lines[index]; // Tampilkan teks lengkap
+                StopGibberish(); // Stop audio gibberish
+                lineFinished = true; // Tandai line sebagai selesai
             }
         }
     }
@@ -57,29 +68,39 @@ public class DialogNormal : MonoBehaviour
         intText.SetActive(false);
         DialogBG.SetActive(true);
 
-        // Hanya nonaktifkan pauseScript jika tidak null
-        if (pauseScript != null) 
+        // Nonaktifkan pauseScript jika tidak null
+        if (pauseScript != null)
         {
             pauseScript.enabled = false;
         }
 
-        // Hanya nonaktifkan pauseScript2 jika tidak null
+        // Nonaktifkan pauseScript2 jika tidak null
         if (pauseScript2 != null)
         {
             pauseScript2.enabled = false;
         }
 
+        lineFinished = false; // Reset flag
         StartCoroutine(TypeLine());
     }
 
     IEnumerator TypeLine()
     {
-        // Mengetik tiap karakter satu per satu
+        lineFinished = false; // Reset flag
+        textComponent.text = ""; // Kosongkan teks sebelumnya
+
         foreach (char c in lines[index].ToCharArray())
         {
             textComponent.text += c;
-            yield return new WaitForSeconds(textSpeed);
+
+            // Memutar suara gibberish secara acak dari array SpeakNoises
+            PlayRandomGibberish();
+
+            yield return new WaitForSeconds(textSpeed); // Tunggu sebelum karakter berikutnya muncul
         }
+
+        // Setelah selesai, tandai line sebagai selesai
+        lineFinished = true;
     }
 
     void NextLine()
@@ -87,30 +108,64 @@ public class DialogNormal : MonoBehaviour
         if (index < lines.Length - 1)
         {
             index++;
-            textComponent.text = string.Empty;
             StartCoroutine(TypeLine());
         }
         else
         {
-            isDialogActive = false; // Tandai bahwa dialog sudah selesai
-            textComponent.text = string.Empty; // Kosongkan teks setelah dialog selesai
-            SC_FPSController.enabled = true; // Aktifkan kembali script player movement
-            audioSource.enabled = true;
-
-            // Hanya aktifkan kembali pauseScript jika tidak null
-            if (pauseScript != null)
-            {
-                pauseScript.enabled = true;
-            }
-
-            // Hanya aktifkan kembali pauseScript2 jika tidak null
-            if (pauseScript2 != null)
-            {
-                pauseScript2.enabled = true;
-            }
-
-            DialogBG.SetActive(false);
+            EndDialog();
         }
+    }
+
+    void EndDialog()
+    {
+        isDialogActive = false; // Tandai bahwa dialog sudah selesai
+        textComponent.text = string.Empty; // Kosongkan teks setelah dialog selesai
+        SC_FPSController.enabled = true; // Aktifkan kembali script player movement
+        audioSource.enabled = true;
+
+        // Aktifkan kembali pauseScript jika tidak null
+        if (pauseScript != null)
+        {
+            pauseScript.enabled = true;
+        }
+
+        // Aktifkan kembali pauseScript2 jika tidak null
+        if (pauseScript2 != null)
+        {
+            pauseScript2.enabled = true;
+        }
+
+        DialogBG.SetActive(false);
+    }
+
+    // Fungsi untuk memutar suara gibberish secara acak
+    void PlayRandomGibberish()
+    {
+        if (SpeakNoises.Length > 0 && !isGibberishPlaying) // Cek jika suara tidak sedang diputar
+        {
+            // Pilih suara secara acak
+            AudioClip randomClip = SpeakNoises[Random.Range(0, SpeakNoises.Length)];
+            gibberishSource.pitch = gibberishPitch; // Set kecepatan playback
+            gibberishSource.PlayOneShot(randomClip); // Mainkan suara
+            isGibberishPlaying = true; // Tandai bahwa suara sedang diputar
+
+            // Hentikan mark ketika clip selesai
+            StartCoroutine(ResetGibberishPlaying(randomClip.length));
+        }
+    }
+
+    // Coroutine untuk mereset flag isGibberishPlaying setelah clip selesai
+    private IEnumerator ResetGibberishPlaying(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        isGibberishPlaying = false; // Set flag menjadi false setelah audio selesai
+    }
+
+    // Fungsi untuk menghentikan audio gibberish
+    void StopGibberish()
+    {
+        gibberishSource.Stop(); // Hentikan audio
+        isGibberishPlaying = false; // Reset flag
     }
 
     // Ketika pemain berada di dalam area trigger
@@ -145,5 +200,6 @@ public class DialogNormal : MonoBehaviour
         interactable = false; // Reset interaction flag
         isDialogActive = false; // Ensure dialog is not active
         DialogBG.SetActive(false); // Hide dialog background
+        StopGibberish(); // Stop any gibberish audio
     }
 }
